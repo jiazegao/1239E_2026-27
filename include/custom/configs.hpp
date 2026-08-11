@@ -2,6 +2,7 @@
 
 #include "lemlib/chassis/chassis.hpp" // IWYU pragma: keep
 #include "lemlib/chassis/trackingWheel.hpp"
+#include "pros/abstract_motor.hpp"
 #include "pros/adi.hpp" // IWYU pragma: keep
 #include "pros/distance.hpp" // IWYU pragma: keep
 #include "pros/imu.hpp" // IWYU pragma: keep
@@ -70,10 +71,12 @@ inline pros::Controller controller(pros::E_CONTROLLER_MASTER);
 inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 
 // Motors
-inline pros::MotorGroup leftMotors({-11, -12, 13}, pros::MotorGearset::blue);
-inline pros::MotorGroup rightMotors({20, 19, -18}, pros::MotorGearset::blue);
-inline pros::Motor frontMotor(17, pros::MotorGearset::blue);
-inline pros::Motor leverMotor(-16, pros::MotorGearset::red);
+inline pros::MotorGroup leftMotors({tempPort, tempPort}, pros::MotorGearset::blue);
+inline pros::MotorGroup rightMotors({tempPort, tempPort}, pros::MotorGearset::blue);
+inline pros::MotorGroup liftMotors({tempPort, tempPort}, pros::MotorGearset::red);
+inline pros::Motor frontIntakeMotor(tempPort, pros::MotorGearset::blue);
+inline pros::Motor endEffLiftMotor(tempPort, pros::MotorGearset::red);
+inline pros::Motor endEffIntakeMotor(tempPort, pros::MotorGearset::red);
 
 inline lemlib::Drivetrain drivetrain(&leftMotors,
                               &rightMotors,
@@ -161,12 +164,9 @@ inline pros::Distance front_dist(1);
 inline pros::Distance left_dist(2);
 inline pros::Distance back_dist(14);
 inline pros::Distance right_dist(8);
-inline pros::Distance fl_dist(4);
-inline pros::Distance bl_dist(6);
-inline pros::Distance br_dist(5);
-inline pros::Distance fr_dist(7);
 
-inline std::array<pros::Distance*, 8> DISTANCE_COLLECTION = {&front_dist, &left_dist, &back_dist, &right_dist, &fl_dist, &bl_dist, &br_dist, &fr_dist};
+
+inline std::array<pros::Distance*, 4> DISTANCE_COLLECTION = {&front_dist, &left_dist, &back_dist, &right_dist};
 
 // Rcl setup
 inline RclSensor front_rcl(&front_dist, -2.277110, 6.184952, 0, 15.0);

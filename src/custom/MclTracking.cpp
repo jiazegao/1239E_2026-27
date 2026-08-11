@@ -304,16 +304,6 @@ void MclTracking::update_weights() {
             valid_sensors[i] = false;
             continue;
         }
-        // Case #4: Top middle goal lip disabling
-        if (intersect_line(sCoord, top_middle, MAX_RANGE, scos, ssin) < MAX_RANGE) {
-            valid_sensors[i] = false;
-            continue;
-        }
-        // Case #5: Lower middle goal disabling
-        if (intersect_line(sCoord, low_middle, MAX_RANGE, scos, ssin) < MAX_RANGE) {
-            valid_sensors[i] = false;
-            continue;
-        }
         // Case #6: Disqualifying intersection with obstacles
         
         // Test for intersections
@@ -410,6 +400,7 @@ void MclTracking::update_weights() {
             bool hit_wall = false;
 
             // Check for obstacle intersection first
+            /*
             for (const auto& line : goal_legs) {
                 p_dist = std::min(p_dist, intersect_line(sCoord, line, MAX_RANGE, scos, ssin));
             }
@@ -430,6 +421,7 @@ void MclTracking::update_weights() {
                     }
                 }
             }
+            */
         
             // Apply angle sigma scaling
             float z;

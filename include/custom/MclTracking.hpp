@@ -63,49 +63,21 @@ private:
         {{-70.2,  70.2}, {-70.2, -70.2}}
     };
 
+    // Field elements
     static constexpr Line_ goal_legs[10] = {
-        // Middle goal
-        {{-5.0f, 5.0f}, {5.0f, -5.0f}},
-        {{-5.0f, -5.0f}, {5.0f, 5.0f}},
-        // Long goal legs
-        // Top left
-        {{-20.7f, 47.12f}, {-22.288033f, 48.659643f}},
-        {{-20.7f, 47.12f}, {-22.288033f, 45.590357f}},
-        // Top right
-        {{20.7f, 47.12f}, {22.288033f, 48.659643f}},
-        {{20.7f, 47.12f}, {22.288033f, 45.590357f}},
-        // Bottom left
-        {{-20.7f, -47.12f}, {-22.288033f, -48.659643f}},
-        {{-20.7f, -47.12f}, {-22.288033f, -45.590357f}},
-        // Bottom right
-        {{20.7f, -47.12f}, {22.288033f, -48.659643f}},
-        {{20.7f, -47.12f}, {22.288033f, -45.590357f}}
-    };
 
-    // Top middle
-    static constexpr Line_ top_middle = {{-14.0f, 14.0f}, {14.0f, -14.0f}};
-    static constexpr Line_ low_middle = {{-14.0f, -14.0f}, {14.0f, 14.0f}};
-
-    // Matchloaders
-    static constexpr Circle match_loaders[4] = {
-        {-67.635f, 46.765f, 2.00f},  {-67.635f, -46.765f, 2.00f}, // Match loaders
-        {67.635f, 46.765f, 2.00f},   {67.635f, -46.765f, 2.00f}
     };
 
     // Sensor mounts
-    static constexpr int SENSOR_COUNT = 8;
+    static constexpr int SENSOR_COUNT = 4;
     static constexpr Pose sensor_mounts[SENSOR_COUNT] = {
         // x (fwd/back), y (left/right), theta (angle sensor is pointing)
         {6.184952f, 2.277110f, 0.0f},    // FRONT
         {-0.733924f, 2.674094f, std::numbers::pi/2}, // LEFT
         {-5.374061f, -1.75f, std::numbers::pi},   // BACK
         {-0.733924f, -2.674094f, std::numbers::pi*3/2},   // RIGHT
-        {-4.092471f, 4.526609f, 0.77411928726f},    // FRONT LEFT
-        {-4.992970f, -2.989211f, 2.36747336632f},    // BACK LEFT
-        {-4.992970f, 2.989211f, 3.91571194086f},     // BACK RIGHT
-        {-4.092471f, -4.526609f, 5.50906601991f}     // FRONT RIGHT
     };
-    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;
     std::array<Timer, SENSOR_COUNT> disableTimers;
 
@@ -154,7 +126,7 @@ private:
     std::array<int, SENSOR_COUNT> sensor_readings_mm;
     std::array<float, SENSOR_COUNT> sensor_readings_inch;
     std::array<int, SENSOR_COUNT> sensor_confs;
-    std::array<bool, SENSOR_COUNT> disabled_sensors = {0, 0, 0, 0, 0, 0, 0, 0};
+    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false, false, false};
 
     static constexpr int NOISE_POOL_SIZE = 2048;
     static constexpr int NOISE_MASK = NOISE_POOL_SIZE - 1;
