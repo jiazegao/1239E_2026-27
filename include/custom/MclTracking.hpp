@@ -54,7 +54,7 @@ private:
         Pose pose;
         float weight;
     };
-
+    
     // Walls
     static constexpr Line_ walls[4] = {
         {{-70.2, -70.2}, { 70.2, -70.2}}, 
@@ -64,9 +64,20 @@ private:
     };
 
     // Field elements
-    static constexpr Line_ goal_legs[10] = {
-
+    static constexpr Circle neutral_bases[5] = {
+        {0.0, 0.0, 2.0},
+        {-47.0, 23.5, 2.0},
+        {-23.5, 47.0, 2.0},
+        {47.0, -23.5, 2.0},
+        {23.5, -47.0, 2.0}
     };
+
+    static constexpr Circle alliance_bases[4] = {
+        {23.5, 47.0, 2.0},
+        {47.0, 23.5, 2.0},
+        {-23.5, -47.0, 2.0},
+        {-47.0, -23.5, 2.0}
+    }; 
 
     // Sensor mounts
     static constexpr int SENSOR_COUNT = 4;

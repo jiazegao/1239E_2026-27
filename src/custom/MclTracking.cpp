@@ -304,7 +304,7 @@ void MclTracking::update_weights() {
             valid_sensors[i] = false;
             continue;
         }
-        // Case #6: Disqualifying intersection with obstacles
+        // Case #4: Disqualifying intersection with obstacles
         
         // Test for intersections
         if (disabling_line_obstacles != nullptr) {
@@ -399,17 +399,15 @@ void MclTracking::update_weights() {
             float p_dist = MAX_RANGE;
             bool hit_wall = false;
 
-            // Check for obstacle intersection first
-            /*
-            for (const auto& line : goal_legs) {
-                p_dist = std::min(p_dist, intersect_line(sCoord, line, MAX_RANGE, scos, ssin));
+            // Check for goal base intersection first
+            for (const auto& circ_ : neutral_bases) {
+                p_dist = std::min(p_dist, intersect_circle(sCoord, circ_, MAX_RANGE, scos, ssin));
             }
-            // If didn't intersect any legs, check other objects
+            for (const auto& circ_ : alliance_bases) {
+                p_dist = std::min(p_dist, intersect_circle(sCoord, circ_, MAX_RANGE, scos, ssin));
+            }
+            // If didn't intersect any field objections, check the walls
             if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
-                for (const auto& c : match_loaders) {
-                    p_dist = std::min(p_dist, intersect_circle(sCoord, c, MAX_RANGE, scos, ssin));
-                }
-                // If didn't intersect matchloaders, check walls
                 if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
                     for (const auto& wall : walls) {
                         p_dist = std::min(p_dist, intersect_line(sCoord, wall, MAX_RANGE, scos, ssin));
@@ -421,7 +419,6 @@ void MclTracking::update_weights() {
                     }
                 }
             }
-            */
         
             // Apply angle sigma scaling
             float z;
