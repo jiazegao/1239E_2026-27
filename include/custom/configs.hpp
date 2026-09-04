@@ -75,8 +75,9 @@ inline pros::MotorGroup leftMotors({tempPort, tempPort}, pros::MotorGearset::blu
 inline pros::MotorGroup rightMotors({tempPort, tempPort}, pros::MotorGearset::blue);
 inline pros::MotorGroup liftMotors({tempPort, tempPort}, pros::MotorGearset::red);
 inline pros::Motor frontIntakeMotor(tempPort, pros::MotorGearset::blue);
-inline pros::Motor endEffLiftMotor(tempPort, pros::MotorGearset::red);
-inline pros::Motor endEffIntakeMotor(tempPort, pros::MotorGearset::red);
+inline pros::Motor effectorIntakeMotor(tempPort, pros::MotorGearset::red);
+inline pros::Motor effectorRotateMotor(tempPort, pros::MotorGearset::red);
+inline lemlib::PID effectorPID(0.0, 0.0, 0.0);
 
 inline lemlib::Drivetrain drivetrain(&leftMotors,
                               &rightMotors,
@@ -91,14 +92,6 @@ inline ScaledIMU imu(15, 360.0, 354.25); // Adjust actual_reading based on your 
 
 // Optical
 inline pros::Optical frontOptic(3);
-
-// Pneumatics
-// inline pros::adi::Potentiometer leverPotent('H');
-inline pros::adi::Pneumatics matchLoadGate('D', false, false);
-inline pros::adi::Pneumatics lift('C', true, true);
-inline pros::adi::Pneumatics leftDescoreArm('A', false, false);
-inline pros::adi::Pneumatics trapDoor('B', false, false);
-inline pros::adi::Pneumatics intakeLift('G', true, true);
 
 // Odometry
 inline lemlib::OdomSensors sensors( nullptr,
@@ -156,14 +149,14 @@ inline lemlib::Chassis chassis( drivetrain, // drivetrain settings
 );
 
 // Distance
-inline pros::Distance midDist(9);
-inline pros::Distance topDist(10);
+inline pros::Distance midDist(tempPort);
+inline pros::Distance topDist(tempPort);
 
 enum DISTSENSORS {FRONT, LEFT, BACK, RIGHT, FRONT_LEFT, BACK_LEFT, BACK_RIGHT, FRONT_RIGHT};
-inline pros::Distance front_dist(1);
-inline pros::Distance left_dist(2);
-inline pros::Distance back_dist(14);
-inline pros::Distance right_dist(8);
+inline pros::Distance front_dist(tempPort);
+inline pros::Distance left_dist(tempPort);
+inline pros::Distance back_dist(tempPort);
+inline pros::Distance right_dist(tempPort);
 
 
 inline std::array<pros::Distance*, 4> DISTANCE_COLLECTION = {&front_dist, &left_dist, &back_dist, &right_dist};
@@ -182,66 +175,7 @@ inline std::ofstream* mclLog = nullptr;
 inline Timer mclLogTimer(100000000.0f);
 
 // Mcl obstacles
-inline std::vector<Line_> soloAWP_obstacles_right = {
-    // Alliance Robot Disable Lines
-    {{-72.0f, 8.0f}, {-36.0f, 8.0f}},
-    {{-36.0f, 8.0f}, {-36.0f, 40.0f}},
-    {{-72.0f, 40.0f}, {-36.0f, 40.0f}},
-    {{-72.0f, 8.0f}, {-72.0f, 40.0f}},
-    // Middle Line
-    {{-4.0f, -71.0f}, {-4.0f, 71.0f}},
-    // oppennent top
-    {{-4.0f, 71.0f}, {71.0f, 71.0f}},
-    // opponent right
-    {{71.0f, 71.0f}, {71.0f, -71.0f}},
-    // opponent bottom
-    {{-4.0f, -71.0f}, {71.0f, -71.0f}}
-};
-inline std::vector<Line_> soloAWP_obstacles_left = {
-    // Alliance Robot Disable Lines
-    {{-72.0f, -8.0f}, {-36.0f, -8.0f}},
-    {{-36.0f, -8.0f}, {-36.0f, -40.0f}},
-    {{-72.0f, -40.0f}, {-36.0f, -40.0f}},
-    {{-72.0f, -8.0f}, {-72.0f, -40.0f}},
-    // Middle Line
-    {{-4.0f, -71.0f}, {-4.0f, 71.0f}},
-    // oppennent top
-    {{-4.0f, 71.0f}, {71.0f, 71.0f}},
-    // opponent right
-    {{71.0f, 71.0f}, {71.0f, -71.0f}},
-    // opponent bottom
-    {{-4.0f, -71.0f}, {71.0f, -71.0f}}
-};
-inline std::vector<Line_> right_dividers = {
-    {{-71.0f, 0.0f}, {-71.0f, 71.0f}},
-    {{-71.0f, 71.0f}, {71.0f, 71.0f}},
-    {{71.0f, 71.0f}, {71.0f, -71.0f}},
-    {{71.0f, -71.0f}, {0.0f, -71.0f}},
-    {{0.0f, -71.0f}, {0.0f, 0.0f}},
-    {{0.0f, 0.0f}, {-71.0f, 0.0f}}
-};
-inline std::vector<Line_> left_dividers = {
-    {{-71.0f, 0.0f}, {-71.0f, -71.0f}},
-    {{-71.0f, -71.0f}, {71.0f, -71.0f}},
-    {{71.0f, -71.0f}, {71.0f, 71.0f}},
-    {{71.0f, 71.0f}, {0.0f, 71.0f}},
-    {{0.0f, 71.0f}, {0.0f, 0.0f}},
-    {{0.0f, 0.0f}, {-71.0f, 0.0f}}
-};
-
-// loaders
-inline Circle_Obstacle redUpLoader(-67.5, 46.5, 3);
-inline Circle_Obstacle redDownLoader(-67.5, -46.5, 3);
-inline Circle_Obstacle blueUpLoader(67.5, 46.5, 3);
-inline Circle_Obstacle blueDownLoader(67.5, -46.5, 3);
-
-// legs
-inline Circle_Obstacle upLongGoalLeft(-21, 47.5, 4);
-inline Circle_Obstacle upLongGoalRight(21, 47.5, 4);
-inline Circle_Obstacle downLongGoalLeft(-21, -47.5, 4);
-inline Circle_Obstacle downLongGoalRight(21, -47.5, 4);
+/* ADD LATER BASED ON NEED*/
 
 // Disable Line
-inline Line_Obstacle disableLine(0, FIELD_NEG_HALF_LENGTH, 0, FIELD_HALF_LENGTH);
-
-inline Circle_Obstacle centerGoals(0, 0, 5);
+/* ADD LATER BASED ON NEED*/

@@ -22,6 +22,9 @@ void initialize() {
 	init_auton_selector();
 	initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
+	initEffectorMacro();
+
+	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::deg);
 }
 
 void disabled() {}
@@ -29,10 +32,15 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 void opcontrol() {
-	
+	while (true) {
+
+		updateTankDrive();
+		updateLiftMotors();
+
+		pros::delay(20);
+	}
 }
