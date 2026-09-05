@@ -8,6 +8,46 @@
 #include "string"
 
 
+// BASIC MOTOR FUNCTIONS
+void startFrontIntake(int velocity) {
+    frontIntakeMotor.move(velocity);
+}
+void reverseFrontIntake(int velocity) {
+    frontIntakeMotor.move(-velocity);
+}
+void stopFrontIntake() {
+    frontIntakeMotor.move(0);
+}
+
+void startEffectorIntake(int velocity) {
+    effectorIntakeMotor.move(velocity);
+}
+void reverseEffectorIntake(int velocity) {
+    effectorIntakeMotor.move(-velocity);
+}
+void stopEffectorIntake() {
+    effectorIntakeMotor.move(0);
+}
+
+void raiseLift(int velocity) {
+    liftMotors.move(velocity);
+}
+void lowerLift(int velocity) {
+    liftMotors.move(-velocity);
+}
+void stopLift() {
+    liftMotors.move(0);
+}
+
+void raiseEffector(int velocity) {
+    effectorRotateMotor.move(velocity);
+}
+void lowerEffector(int velocity) {
+    effectorRotateMotor.move(-velocity);
+}
+void stopEffector() {
+    effectorRotateMotor.move(0);
+}
 
 pros::Task* effectorMacroTask;
 float effectorTargetDeg = 0.0;
