@@ -71,10 +71,10 @@ inline pros::Controller controller(pros::E_CONTROLLER_MASTER);
 inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 
 // Motors
-inline pros::MotorGroup leftMotors({tempPort, tempPort}, pros::MotorGearset::blue);
-inline pros::MotorGroup rightMotors({tempPort, tempPort}, pros::MotorGearset::blue);
-inline pros::MotorGroup liftMotors({tempPort, tempPort}, pros::MotorGearset::red);
-inline pros::Motor frontIntakeMotor(tempPort, pros::MotorGearset::blue);
+inline pros::MotorGroup leftMotors({8, 10}, pros::MotorGearset::blue);
+inline pros::MotorGroup rightMotors({-9, -19}, pros::MotorGearset::blue);
+inline pros::MotorGroup liftMotors({tempPort, tempPort}, pros::MotorGearset::blue);
+inline pros::Motor frontIntakeMotor(20, pros::MotorGearset::blue);
 inline pros::Motor effectorIntakeMotor(tempPort, pros::MotorGearset::red);
 inline pros::Motor effectorRotateMotor(tempPort, pros::MotorGearset::red);
 inline lemlib::PID effectorPID(0.0, 0.0, 0.0);
