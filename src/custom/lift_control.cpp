@@ -93,8 +93,8 @@ void updateLiftMotors() {
     else stopEffectorIntake();
 
     // Lift
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) raiseLift();
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) lowerLift();
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) raiseLift();
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) lowerLift();
     else stopLift();
 
     // Effector Rotation
