@@ -327,6 +327,21 @@ void runPIDTuner() {
         pros::delay(50);
     }
 }
+
+void moveForward(float inches, int timeout, float maxSpeed, float minSpeed, bool async) {
+    lemlib::Pose current = chassis.getPose();
+    float targetX = current.x + inches * cos(current.theta * M_PI / 180.0);
+    float targetY = current.y + inches * sin(current.theta * M_PI / 180.0);
+    chassis.moveToPoint(targetX, targetY, timeout, {.forwards = true, .maxSpeed = maxSpeed, .minSpeed = minSpeed}, async);
+}
+
+void moveBackward(float inches, int timeout, float maxSpeed, float minSpeed, bool async) {
+    lemlib::Pose current = chassis.getPose();
+    float targetX = current.x - inches * cos(current.theta * M_PI / 180.0);
+    float targetY = current.y - inches * sin(current.theta * M_PI / 180.0);
+    chassis.moveToPoint(targetX, targetY, timeout, {.forwards = false, .maxSpeed = maxSpeed, .minSpeed = minSpeed}, async);
+}
+
 void partnerControllerVibrate() {
 
     static bool vibrated60 = false;

@@ -17,12 +17,13 @@
 void initialize() {
     chassis.calibrate();
     chassis.setPose(0, 0, 0);
-	// pros::lcd::initialize();
+	pros::lcd::initialize();
 
-	init_auton_selector();
-	initControllerDisplay();
+	//init_auton_selector();
+	//initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
 	initEffectorMacro();
+	runPIDTuner();
 
 	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::deg);
 }
