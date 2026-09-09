@@ -42,7 +42,7 @@ private:
     static constexpr float IMU_VARIANCE = 0.005f;
     static constexpr float FAULT_TOLERANCE = 0.01f;
     float DIST_SYNC_PROP = 0.10f;
-    static constexpr float THETA_SYNC_PROP = 0.001f;
+    static constexpr float THETA_SYNC_PROP = 0.000f;
     static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.03f;
     static constexpr float HORIZ_CONSTANT_NOISE = 0.03f;
 
@@ -79,14 +79,25 @@ private:
         {-47.0, -23.5, 2.0}
     }; 
 
+    /*
+    1 frontLeft 5.6937585" left, 4.656207" forward, 9.1200955" high
+    8 frontRight 5.6937585" right, 4.656207" forward, 9.1200955" high
+
+    18 leftBack 2.999773" back, 5.857102" left, 4.194753" high
+
+    2 backLeft 5.6937585" left, 0.920094" back, 9.120095" high
+
+    3 rightBack 2.999773" back, 5.857102" right, 4.194753" high
+    */
+
     // Sensor mounts
     static constexpr int SENSOR_COUNT = 4;
     static constexpr Pose sensor_mounts[SENSOR_COUNT] = {
         // x (fwd/back), y (left/right), theta (angle sensor is pointing)
-        {6.184952f, 2.277110f, 0.0f},    // FRONT
+        {4.656207f, 5.6937585f, 0.0f},    // FRONT; 9.12" high
         {-0.733924f, 2.674094f, std::numbers::pi/2}, // LEFT
         {-5.374061f, -1.75f, std::numbers::pi},   // BACK
-        {-0.733924f, -2.674094f, std::numbers::pi*3/2},   // RIGHT
+        {-0.733924f, -2.674094f, std::numbers::pi*3/2}   // RIGHT
     };
     std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;

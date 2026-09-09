@@ -3,22 +3,13 @@
 #include "custom/configs.hpp"
 #include "liblvgl/lvgl.h"
 
-// Controls
-void updatePneumatics();
-void updateTankDrive();
-void updateIntake();
-
 // Pneumatics functions
 void moveForward(float inches, int timeout, float maxSpeed=127, float minSpeed=1, bool async=true);
 void moveBackward(float inches, int timeout, float maxSpeed, float minSpeed,  bool async);
 void jiggle(int repeats, int time, float forward=8.0, float backward=1.5);
 void shake(int repeats, int time);
-void openGate();
-void closeGate();
-void extendMidDescore();
-void retractMidDescore();
-void extendLeftArm();
-void retractLeftArm();
+
+void updateTankDrive();
 
 // Display
 LV_IMAGE_DECLARE(FB_Logo);

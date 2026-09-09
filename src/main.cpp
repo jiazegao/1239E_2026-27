@@ -15,16 +15,17 @@
 #include "custom/lift_control.hpp"
 
 void initialize() {
+	pros::lcd::initialize();
     chassis.calibrate();
     chassis.setPose(0, 0, 0);
-	pros::lcd::initialize();
 
 	//init_auton_selector();
 	//initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
 	initEffectorMacro();
-	runPIDTuner();
+	//initBrainDisplay();
 
+	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::deg);
 }
 
@@ -37,11 +38,15 @@ void autonomous() {
 }
 
 void opcontrol() {
+
+	// startBrainCoordDisplay();
+	runPIDTuner();
+
 	while (true) {
 
 		updateTankDrive();
 		updateLiftMotors();
 
-		pros::delay(20);
+		pros::delay(30);
 	}
 }

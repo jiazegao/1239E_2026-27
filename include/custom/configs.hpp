@@ -25,13 +25,13 @@ private:
 
 public:
     // Constructor: Passes the port to the base pros::Imu class and calculates the scale factor
-    ScaledIMU(uint8_t port, double expected_rotation = 360.0, double actual_reading = 355.0) 
+    ScaledIMU(uint8_t port, double expected_rotation = 360.0, double actual_reading = 360.0) 
         : pros::Imu(port) {
         scale_factor = expected_rotation / actual_reading; 
     }
 
     // "Override" the rotation method to return the scaled continuous rotation
-    double get_rotation() const {
+    double get_rotation() const override {
         double raw_rotation = pros::Imu::get_rotation();
         
         // Check for PROS error return (usually INFINITY for doubles)
@@ -43,7 +43,7 @@ public:
     }
 
     // "Override" the heading method to return a bounded 0-360 degree value
-    double get_heading() const {
+    double get_heading() const override {
         double scaled_rotation = this->get_rotation();
         
         if (std::isinf(scaled_rotation)) {
@@ -88,7 +88,7 @@ inline lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // IMU
-inline ScaledIMU imu(15, 360.0, 354.25); // Adjust actual_reading based on your IMU's behavior
+inline ScaledIMU imu(16, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
 
 // Optical
 inline pros::Optical frontOptic(3);
@@ -103,26 +103,26 @@ inline lemlib::OdomSensors sensors( nullptr,
 
 // Lateral PID controller
 inline lemlib::ControllerSettings lateral_controller(
-                                              7.0, // proportional gain (kP)
+                                              10.0, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              30.0, // derivative gain (kD)
+                                              20.0, // derivative gain (kD)
                                               0, // anti windup
-                                              0.5, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              1.5, // large error range, in inches
-                                              200, // large error range timeout, in milliseconds
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
 // Angular PID controller
-inline lemlib::ControllerSettings angular_controller(4.0, // proportional gain (kP)
+inline lemlib::ControllerSettings angular_controller(3.0, // proportional gain (kP)
                                             0, // integral gain (kI)
-                                              37.7, // derivative gain (kD)
+                                              19.5, // derivative gain (kD)
                                               0, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              2, // large error range, in degrees
-                                              200, // large error range timeout, in milliseconds
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 

@@ -13,6 +13,30 @@
 #include "pros/rtos.h"
 #include "custom/lift_control.hpp"
 
+// Auton functions
+void moveForward(float inches, int timeout, float maxSpeed, float minSpeed, bool async) {
+    chassis.moveToPoint(chassis.getPose().x+inches*std::cos(vexToStd(chassis.getPose().theta)), chassis.getPose().y+inches*std::sin(vexToStd(chassis.getPose().theta)), timeout, {.forwards=inches > 0 ? true : false, .maxSpeed=maxSpeed, .minSpeed=minSpeed}, async);
+}
+void moveBackward(float inches, int timeout, float maxSpeed, float minSpeed,  bool async) {
+    chassis.moveToPoint(chassis.getPose().x+inches*std::cos(vexToStd(chassis.getPose().theta+180)), chassis.getPose().y+inches*std::sin(vexToStd(chassis.getPose().theta+180)), timeout, {.forwards=false, .maxSpeed=maxSpeed, .minSpeed=minSpeed}, async);
+}
+void jiggle(int repeats, int time, float forward, float backward) {
+    for (int i = 0; i < repeats; i++) {
+        moveForward(forward, time/repeats*3/4, 80, 50, false);
+        moveForward(-backward, time/repeats/4, 31, 30, false);
+    }
+}
+void shake(int repeats, int time) {
+    float orig_theta = chassis.getPose().theta;
+    for (int i = 0; i < repeats; i++) {
+        chassis.turnToHeading(orig_theta + 15, time/repeats/5, {}, false);
+        chassis.turnToHeading(orig_theta - 15, time/repeats/5, {}, false);
+        chassis.turnToHeading(orig_theta, time/repeats/5, {}, false);
+        moveForward(-4, time/repeats/5, 80, 40, false);
+        moveForward(4, time/repeats/5, 80, 40, false);
+    }
+}
+
 // Tank drive
 void updateTankDrive() { chassis.tank(controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)); }
 
@@ -70,9 +94,9 @@ void startControllerAutonSelectorDisplay() {
 
 void startBrainCoordDisplay() {
     brainDisplayFunc = [](){
-        pros::lcd::print(0, 0, "X: %f", chassis.getPose().x);
-        pros::lcd::print(1, 0, "Y: %f", chassis.getPose().y);
-        pros::lcd::print(2, 0, "Heading: %f", chassis.getPose().theta);
+        pros::lcd::print(0, "X: %f", chassis.getPose().x);
+        pros::lcd::print(1, "Y: %f", chassis.getPose().y);
+        pros::lcd::print(2, "Heading: %f", chassis.getPose().theta);
     };
 };
 
@@ -314,32 +338,18 @@ void runPIDTuner() {
         // Movements
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
             pros::lcd::print(7, "Moving to point...");
-            moveForward(forwardAmount, 2000, 127, 1, false);
+            moveForward(forwardAmount, 3000, 127, 1, false);
             savePIDValues();
         }
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
             pros::lcd::print(7, "Turning to heading...");
             auto p = chassis.getPose();
-            chassis.turnToHeading(p.theta+turnAmount, 1500, {}, false);
+            chassis.turnToHeading(p.theta+turnAmount, 3000, {}, false);
             savePIDValues();
         }
 
         pros::delay(50);
     }
-}
-
-void moveForward(float inches, int timeout, float maxSpeed, float minSpeed, bool async) {
-    lemlib::Pose current = chassis.getPose();
-    float targetX = current.x + inches * cos(current.theta * M_PI / 180.0);
-    float targetY = current.y + inches * sin(current.theta * M_PI / 180.0);
-    chassis.moveToPoint(targetX, targetY, timeout, {.forwards = true, .maxSpeed = maxSpeed, .minSpeed = minSpeed}, async);
-}
-
-void moveBackward(float inches, int timeout, float maxSpeed, float minSpeed, bool async) {
-    lemlib::Pose current = chassis.getPose();
-    float targetX = current.x - inches * cos(current.theta * M_PI / 180.0);
-    float targetY = current.y - inches * sin(current.theta * M_PI / 180.0);
-    chassis.moveToPoint(targetX, targetY, timeout, {.forwards = false, .maxSpeed = maxSpeed, .minSpeed = minSpeed}, async);
 }
 
 void partnerControllerVibrate() {
