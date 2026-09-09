@@ -164,8 +164,8 @@ void startMclBenchmark(float x, float y, float theta, float autoReset) {
                 MclMain.updateBotPose();
             }
             MclComputeTime = MclT.elapsed();
+            MclRate = 1000.0 / MclComputeTime;
             pros::delay(10);
-            MclRate = 1000.0 / (MclT.elapsed() + 1e-10);
         }
     });
 
@@ -193,7 +193,7 @@ void startMcl(float x, float y, float vexTheta, bool resetFront, bool resetLeft,
 	RclMain.setRclPose(p);
     
     // Perform RCL Resets
-    if (resetFront) RclMain.updateBotPose(&front_rcl);
+    if (resetFront) RclMain.updateBotPose(&frontL_rcl);
     if (resetLeft) RclMain.updateBotPose(&left_rcl);
     if (resetBack) RclMain.updateBotPose(&back_rcl);
     if (resetRight) RclMain.updateBotPose(&right_rcl);

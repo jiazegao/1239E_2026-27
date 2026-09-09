@@ -79,27 +79,24 @@ private:
         {-47.0, -23.5, 2.0}
     }; 
 
-    /*
-    1 frontLeft 5.6937585" left, 4.656207" forward, 9.1200955" high
-    8 frontRight 5.6937585" right, 4.656207" forward, 9.1200955" high
-
-    18 leftBack 2.999773" back, 5.857102" left, 4.194753" high
-
-    2 backLeft 5.6937585" left, 0.920094" back, 9.120095" high
-
-    3 rightBack 2.999773" back, 5.857102" right, 4.194753" high
-    */
+    static constexpr Circle match_loaders[4] = {
+        {68.25, -58.75, 2.0},
+        {68.25, 58.75, 2.0},
+        {-68.25, -58.75, 2.0},
+        {-68.25, 58.75, 2.0}
+    };
 
     // Sensor mounts
-    static constexpr int SENSOR_COUNT = 4;
+    static constexpr int SENSOR_COUNT = 5;
     static constexpr Pose sensor_mounts[SENSOR_COUNT] = {
         // x (fwd/back), y (left/right), theta (angle sensor is pointing)
-        {4.656207f, 5.6937585f, 0.0f},    // FRONT; 9.12" high
-        {-0.733924f, 2.674094f, std::numbers::pi/2}, // LEFT
-        {-5.374061f, -1.75f, std::numbers::pi},   // BACK
-        {-0.733924f, -2.674094f, std::numbers::pi*3/2}   // RIGHT
+        {4.656207f, 5.6937585f, 0.0f},      // FRONT LEFT; 9.12" high
+        {4.656207f, -5.6937585f, 0.0f},     // FRONT RIGHT; 9.12" high
+        {-2.999773f, 5.857102f, std::numbers::pi/2}, // LEFT BACK; 4.19" high
+        {-0.920094f, 5.6937585f, std::numbers::pi},   // BACK LEFT; 9.12" high
+        {-2.999773f, -5.857102f, std::numbers::pi*3/2}   // RIGHT BACK; 4.19" high
     };
-    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr};
+    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;
     std::array<Timer, SENSOR_COUNT> disableTimers;
 
@@ -148,7 +145,7 @@ private:
     std::array<int, SENSOR_COUNT> sensor_readings_mm;
     std::array<float, SENSOR_COUNT> sensor_readings_inch;
     std::array<int, SENSOR_COUNT> sensor_confs;
-    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false, false, false};
+    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false, false, false, false};
 
     static constexpr int NOISE_POOL_SIZE = 2048;
     static constexpr int NOISE_MASK = NOISE_POOL_SIZE - 1;

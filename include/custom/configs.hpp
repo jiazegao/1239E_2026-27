@@ -149,23 +149,21 @@ inline lemlib::Chassis chassis( drivetrain, // drivetrain settings
 );
 
 // Distance
-inline pros::Distance midDist(tempPort);
-inline pros::Distance topDist(tempPort);
+enum DISTSENSORS {FRONT_L, FRONT_R, LEFT, BACK, RIGHT};
+inline pros::Distance frontL_dist(1);
+inline pros::Distance frontR_dist(8);
+inline pros::Distance left_dist(18);
+inline pros::Distance back_dist(2);
+inline pros::Distance right_dist(3);
 
-enum DISTSENSORS {FRONT, LEFT, BACK, RIGHT, FRONT_LEFT, BACK_LEFT, BACK_RIGHT, FRONT_RIGHT};
-inline pros::Distance front_dist(tempPort);
-inline pros::Distance left_dist(tempPort);
-inline pros::Distance back_dist(tempPort);
-inline pros::Distance right_dist(tempPort);
-
-
-inline std::array<pros::Distance*, 4> DISTANCE_COLLECTION = {&front_dist, &left_dist, &back_dist, &right_dist};
+inline std::array<pros::Distance*, 5> DISTANCE_COLLECTION = {&frontL_dist, &frontR_dist, &left_dist, &back_dist, &right_dist};
 
 // Rcl setup
-inline RclSensor front_rcl(&front_dist, -2.277110, 6.184952, 0, 15.0);
-inline RclSensor left_rcl(&left_dist, -2.674094, -0.733924, 270.0, 15.0);
-inline RclSensor back_rcl(&back_dist, 1.75, -5.374061, 180.0, 15.0);
-inline RclSensor right_rcl(&right_dist, 2.674094, -0.733924, 90.0, 15.0);
+inline RclSensor frontL_rcl(&frontL_dist, -5.6937585, 4.656207, 0, 15.0);
+inline RclSensor frontR_rcl(&frontR_dist, 5.6937585, 4.656207, 0, 15.0);
+inline RclSensor left_rcl(&left_dist, -5.857102, -2.999773, 270.0, 15.0);
+inline RclSensor back_rcl(&back_dist, -5.6937585, -0.920094, 180.0, 15.0);
+inline RclSensor right_rcl(&right_dist, 5.857102, -2.999773, 90.0, 15.0);
 inline RclTracking RclMain(&chassis, 1, false, 0.5, 4.0, 200.0, 6.0, 50);
 inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {nullptr, 0.0, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
 
@@ -174,8 +172,20 @@ inline MCL_Log_Format mclLogType = DISABLED;
 inline std::ofstream* mclLog = nullptr;
 inline Timer mclLogTimer(100000000.0f);
 
-// Mcl obstacles
+// RCL obstacles
+inline Circle_Obstacle neutral_base1(0.0, 0.0, 4.0);
+inline Circle_Obstacle neutral_base2(-47.0, 23.5, 4.0);
+inline Circle_Obstacle neutral_base3(-23.5, 47.0, 4.0);
+inline Circle_Obstacle neutral_base4(47.0, -23.5, 4.0);
+inline Circle_Obstacle neutral_base5(23.5, -47.0, 4.0);
+
+inline Circle_Obstacle alliance_base1(23.5, 47.0, 4.0);
+inline Circle_Obstacle alliance_base2(47.0, 23.5, 4.0);
+inline Circle_Obstacle alliance_base3(-23.5, -47.0, 4.0);
+inline Circle_Obstacle alliance_base4(-47.0, -23.5, 4.0);
+
+// MCL obstacles
 /* ADD LATER BASED ON NEED*/
 
 // Disable Line
-/* ADD LATER BASED ON NEED*/
+inline Line_Obstacle disableLine(-72.0, 72.0, 72.0, -72.0);

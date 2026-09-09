@@ -20,7 +20,7 @@ void initialize() {
     chassis.setPose(0, 0, 0);
 
 	//init_auton_selector();
-	//initControllerDisplay();
+	initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
 	initEffectorMacro();
 	//initBrainDisplay();
@@ -39,14 +39,14 @@ void autonomous() {
 
 void opcontrol() {
 
-	// startBrainCoordDisplay();
-	runPIDTuner();
+	startControllerCoordDisplay();
+	startMclBenchmark();
 
 	while (true) {
 
 		updateTankDrive();
 		updateLiftMotors();
 
-		pros::delay(30);
+		pros::delay(20);
 	}
 }
