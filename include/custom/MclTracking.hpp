@@ -20,7 +20,7 @@ class MclTracking {
 private:
 
     // --- Configuration Constants ---
-    static constexpr int PARTICLE_COUNT = 2048;
+    static constexpr int PARTICLE_COUNT = 1024;
     static constexpr float INV_PARTICLE_COUNT = 1.0f / PARTICLE_COUNT;
     static constexpr int RESAMPLE_THRESHOLD = PARTICLE_COUNT / 2;
     static constexpr float MIN_DIST_FROM_RESAMPLE = 5.0f;
@@ -41,7 +41,7 @@ private:
     static constexpr float TRACKING_WHEEL_VARIANCE = 0.08f;
     static constexpr float IMU_VARIANCE = 0.005f;
     static constexpr float FAULT_TOLERANCE = 0.01f;
-    float DIST_SYNC_PROP = 0.10f;
+    float DIST_SYNC_PROP = 0.00f;
     static constexpr float THETA_SYNC_PROP = 0.000f;
     static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.03f;
     static constexpr float HORIZ_CONSTANT_NOISE = 0.03f;
@@ -63,43 +63,72 @@ private:
         {{-70.2,  70.2}, {-70.2, -70.2}}
     };
 
-    // Field elements
-    static constexpr Circle neutral_bases[5] = {
-        {0.0, 0.0, 2.0},
-        {-47.0, 23.5, 2.0},
-        {-23.5, 47.0, 2.0},
-        {47.0, -23.5, 2.0},
-        {23.5, -47.0, 2.0}
+    // Universal elements
+    static constexpr Line_ universal_match_loaders[12] = {
+        // Top Right
+        {{70.5, 56.75}, {66.5, 56.75}},
+        {{66.5, 56.75}, {66.5, 60.75}},
+        {{66.5, 60.75}, {70.5, 60.75}},
+        // Top Left
+        {{-70.5, 56.75}, {-66.5, 56.75}},
+        {{-66.5, 56.75}, {-66.5, 60.75}},
+        {{-66.5, 60.75}, {-70.5, 60.75}},
+        // Bottom Left
+        {{-70.5, -56.75}, {-66.5, -56.75}},
+        {{-66.5, -56.75}, {-66.5, -60.75}},
+        {{-66.5, -60.75}, {-70.5, -60.75}},
+        // Bottom Right
+        {{70.5, -56.75}, {66.5, -56.75}},
+        {{66.5, -56.75}, {66.5, -60.75}},
+        {{66.5, -60.75}, {70.5, -60.75}}
     };
 
-    static constexpr Circle alliance_bases[4] = {
-        {23.5, 47.0, 2.0},
-        {47.0, 23.5, 2.0},
-        {-23.5, -47.0, 2.0},
-        {-47.0, -23.5, 2.0}
-    }; 
+    // HIGH field elements
+    static constexpr Circle high_center_base = {0.0, 0.0, 1.5937075};
 
-    /*
-    1 frontLeft 5.6937585" left, 4.656207" forward, 9.1200955" high
-    8 frontRight 5.6937585" right, 4.656207" forward, 9.1200955" high
+    // LOW field elements
+    static constexpr Line_ low_center_base[4] = {
+        {{2.8056165, 2.8056165},{2.8056165, -2.8056165}},
+        {{2.8056165, -2.8056165},{-2.8056165, -2.8056165}},
+        {{-2.8056165, -2.8056165},{-2.8056165, 2.8056165}},
+        {{-2.8056165, 2.8056165},{2.8056165, 2.8056165}}
+    };
 
-    18 leftBack 2.999773" back, 5.857102" left, 4.194753" high
-
-    2 backLeft 5.6937585" left, 0.920094" back, 9.120095" high
-
-    3 rightBack 2.999773" back, 5.857102" right, 4.194753" high
-    */
+    static constexpr Line_ low_neutral_bases[16] = {
+        // LEFTMOST
+        {{-44.5, 26.0},{-44.5, 21.0}},
+        {{-44.5, 21.0},{-49.5, 21.0}},
+        {{-49.5, 21.0},{-49.5, 26.0}},
+        {{-49.5, 26.0},{-44.5, 26.0}},
+        // UPMOST
+        {{-21.0, 49.5},{-21.0, 44.5}},
+        {{-21.0, 44.5},{-26.0, 44.5}},
+        {{-26.0, 44.5},{-26.0, 49.5}},
+        {{-26.0, 49.5},{-21.0, 49.5}},
+        // RIGHTMOST
+        {{44.5, -26.0},{44.5, -21.0}},
+        {{44.5, -21.0},{49.5, -21.0}},
+        {{49.5, -21.0},{49.5, -26.0}},
+        {{49.5, -26.0},{44.5, -26.0}},
+        // BOTTOMMOST
+        {{21.0, -49.5},{21.0, -44.5}},
+        {{21.0, -44.5},{26.0, -44.5}},
+        {{26.0, -44.5},{26.0, -49.5}},
+        {{26.0, -49.5},{21.0, -49.5}}
+    };
 
     // Sensor mounts
-    static constexpr int SENSOR_COUNT = 4;
+    static constexpr int SENSOR_COUNT = 5;
     static constexpr Pose sensor_mounts[SENSOR_COUNT] = {
         // x (fwd/back), y (left/right), theta (angle sensor is pointing)
-        {4.656207f, 5.6937585f, 0.0f},    // FRONT; 9.12" high
-        {-0.733924f, 2.674094f, std::numbers::pi/2}, // LEFT
-        {-5.374061f, -1.75f, std::numbers::pi},   // BACK
-        {-0.733924f, -2.674094f, std::numbers::pi*3/2}   // RIGHT
+        {4.656207f, 5.6937585f, 0.0f},      // FRONT LEFT; 9.12" high
+        {4.656207f, -5.6937585f, 0.0f},     // FRONT RIGHT; 9.12" high
+        {-2.999773f, 5.857102f, std::numbers::pi/2}, // LEFT BACK; 4.19" high
+        {-0.920094f, 5.6937585f, std::numbers::pi},   // BACK LEFT; 9.12" high
+        {-2.999773f, -5.857102f, std::numbers::pi*3/2}   // RIGHT BACK; 4.19" high
     };
-    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr};
+    static constexpr bool high_sensor[SENSOR_COUNT] = {true, true, false, true, false};
+    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;
     std::array<Timer, SENSOR_COUNT> disableTimers;
 
@@ -148,7 +177,7 @@ private:
     std::array<int, SENSOR_COUNT> sensor_readings_mm;
     std::array<float, SENSOR_COUNT> sensor_readings_inch;
     std::array<int, SENSOR_COUNT> sensor_confs;
-    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false, false, false};
+    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false, false, false, false};
 
     static constexpr int NOISE_POOL_SIZE = 2048;
     static constexpr int NOISE_MASK = NOISE_POOL_SIZE - 1;

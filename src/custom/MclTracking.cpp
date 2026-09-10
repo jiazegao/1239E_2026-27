@@ -291,11 +291,7 @@ void MclTracking::update_weights() {
             valid_sensors[i] = false;
             continue;
         }
-        if (sensor_readings_mm[i] < 1) {
-            valid_sensors[i] = false;
-            continue;
-        }
-        if (i == DISTSENSORS::FRONT && sensor_readings_mm[i] < 60) {
+        if (sensor_readings_mm[i] < 10) {
             valid_sensors[i] = false;
             continue;
         }
@@ -400,14 +396,30 @@ void MclTracking::update_weights() {
             bool hit_wall = false;
 
             // Check for goal base intersection first
-            for (const auto& circ_ : neutral_bases) {
-                p_dist = std::min(p_dist, intersect_circle(sCoord, circ_, MAX_RANGE, scos, ssin));
+
+            // High sensor special elements
+            if (high_sensor[i]) {
+                // Center base
+                p_dist = std::min(p_dist, intersect_circle(sCoord, high_center_base, MAX_RANGE, scos, ssin));
             }
-            for (const auto& circ_ : alliance_bases) {
-                p_dist = std::min(p_dist, intersect_circle(sCoord, circ_, MAX_RANGE, scos, ssin));
+            else {
+                // Center base
+                for (const auto& l_ : low_center_base) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
+                }
+                // Neutral bases
+                for (const auto& l_ : low_neutral_bases) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
+                }
             }
-            // If didn't intersect any field objections, check the walls
+
+            // If didn't intersect any field objections, check the matchloaders and walls
             if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
+                // Matchloaders
+                for (const auto& l_ : universal_match_loaders) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
+                }
+                // Walls
                 if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
                     for (const auto& wall : walls) {
                         p_dist = std::min(p_dist, intersect_line(sCoord, wall, MAX_RANGE, scos, ssin));
