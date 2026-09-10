@@ -19,13 +19,13 @@ void initialize() {
     chassis.calibrate();
     chassis.setPose(0, 0, 0);
 
-	//init_auton_selector();
-	//initControllerDisplay();
+	init_auton_selector();
+	initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
 	initEffectorMacro();
-	//initBrainDisplay();
+	initBrainDisplay();
 
-	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+	//chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::deg);
 }
 
@@ -40,7 +40,7 @@ void autonomous() {
 void opcontrol() {
 
 	// startBrainCoordDisplay();
-	runPIDTuner();
+	//runPIDTuner();
 
 	while (true) {
 
