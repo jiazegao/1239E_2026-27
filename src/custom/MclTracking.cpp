@@ -396,17 +396,28 @@ void MclTracking::update_weights() {
             bool hit_wall = false;
 
             // Check for goal base intersection first
-            for (const auto& circ_ : neutral_bases) {
-                p_dist = std::min(p_dist, intersect_circle(sCoord, circ_, MAX_RANGE, scos, ssin));
+
+            // High sensor special elements
+            if (high_sensor[i]) {
+                // Center base
+                p_dist = std::min(p_dist, intersect_circle(sCoord, high_center_base, MAX_RANGE, scos, ssin));
             }
-            for (const auto& circ_ : alliance_bases) {
-                p_dist = std::min(p_dist, intersect_circle(sCoord, circ_, MAX_RANGE, scos, ssin));
+            else {
+                // Center base
+                for (const auto& l_ : low_center_base) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
+                }
+                // Neutral bases
+                for (const auto& l_ : low_neutral_bases) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
+                }
             }
+
             // If didn't intersect any field objections, check the matchloaders and walls
             if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
                 // Matchloaders
-                for (const auto& circ_ : match_loaders) {
-                    p_dist = std::min(p_dist, intersect_circle(sCoord, circ_, MAX_RANGE, scos, ssin));
+                for (const auto& l_ : universal_match_loaders) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
                 }
                 // Walls
                 if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
