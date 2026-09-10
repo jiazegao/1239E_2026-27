@@ -73,7 +73,7 @@ inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 // Motors
 inline pros::MotorGroup leftMotors({10, 9}, pros::MotorGearset::blue);
 inline pros::MotorGroup rightMotors({-19, -17}, pros::MotorGearset::blue);
-inline pros::MotorGroup liftMotors({7, -21}, pros::MotorGearset::blue);
+inline pros::MotorGroup liftMotors({-7, 21}, pros::MotorGearset::blue);
 inline pros::Motor frontIntakeMotor(20, pros::MotorGearset::blue);
 inline pros::Motor effectorIntakeMotor(6, pros::MotorGearset::green);
 inline pros::Motor effectorRotateMotor(5, pros::MotorGearset::green);
