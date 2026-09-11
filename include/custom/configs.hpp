@@ -88,7 +88,7 @@ inline lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // IMU
-inline ScaledIMU imu(16, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
+inline ScaledIMU imu(16, 360.0, 360.91); // Adjust actual_reading based on your IMU's behavior
 
 // Optical
 inline pros::Optical frontOptic(3);
@@ -168,7 +168,7 @@ inline RclTracking RclMain(&chassis, 1, false, 0.5, 4.0, 200.0, 6.0, 50);
 inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {nullptr, 0.0, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
 
 enum MCL_Log_Format {DISABLED, SDCARD, SCREEN};
-inline MCL_Log_Format mclLogType = DISABLED;
+inline MCL_Log_Format mclLogType = SDCARD;
 inline std::ofstream* mclLog = nullptr;
 inline Timer mclLogTimer(100000000.0f);
 
