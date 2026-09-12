@@ -43,7 +43,7 @@ void opcontrol() {
 	startMclBenchmark();
 
 	hardResetEffector();
-	pros::delay(3000);
+	pros::delay(5000);
 	setEffector(90.0);
 
 

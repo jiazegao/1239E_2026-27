@@ -51,22 +51,24 @@ void stopEffector() {
 
 pros::Task* effectorMacroTask;
 float effectorTargetDeg = 0.0;
+bool hardResettingEffector = false;
 void initEffectorMacro() {
     effectorMacroTask = new pros::Task ([](){
         while (true) {
-            float output = effectorPID.update(effectorTargetDeg-effectorRotateMotor.get_position());
-            effectorRotateMotor.move(output);
+            if (!hardResettingEffector) {
+                float output = effectorPID.update(effectorTargetDeg-effectorRotateMotor.get_position());
+                effectorRotateMotor.move(output);
+            }
             pros::delay(20);
         }
     });
 }
 
-bool hardResettingEffector = false;
 void hardResetEffector() {
     pros::Task([](){
         hardResettingEffector = true;
         pros::delay(100);
-        effectorTargetDeg = -1e99;
+        effectorRotateMotor.move(-127);
         pros::delay(3000);
         effectorRotateMotor.set_zero_position(0.0);
         hardResettingEffector = false;
@@ -98,9 +100,4 @@ void updateLiftMotors() {
     else stopLift();
 
     // Effector Rotation
-    if (!hardResettingEffector) {
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) raiseEffector();
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) lowerEffector();
-        else stopEffector();
-    }
 }

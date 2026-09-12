@@ -140,7 +140,7 @@ MclTracking::MclTracking(lemlib::Chassis* chassis, lemlib::Drivetrain* dt, std::
 
     // Initialize gaussian lut
     for (int i = 0; i < GAUSSIAN_LUT_RES; i++) {
-        float x = (i / GAUSSIAN_LUT_RES) * 4.0f; // Map index to 0-4 sigmas
+        float x = (static_cast<float>(i) / GAUSSIAN_LUT_RES) * 4.0f; // Map index to 0-4 sigmas
         gaussian_lut[i] = std::exp(-(x * x) / 2.0f);
     }
 }
@@ -398,7 +398,7 @@ void MclTracking::update_weights() {
             // Check for goal base intersection first
 
             // High sensor special elements
-            if (high_sensor[i]) {
+            if (high_sensor[j]) {
                 // Center base
                 p_dist = std::min(p_dist, intersect_circle(sCoord, high_center_base, MAX_RANGE, scos, ssin));
             }
@@ -789,11 +789,11 @@ float MclTracking::getDTWheelDegrees() {
     for (double pos : rightPos) sum += pos;
 
     // 6 wheels, 3 on each side
-    float avgRotates = static_cast<float>(sum) * 0.166666666667f;
+    float avgRotates = static_cast<float>(sum) * ODOM_MULTIPLIER;
 
     // Calculate Manual Gear Ratio
     // Blue cartridge (11W) = 600 RPM internal
-    float gearRatio = dt->rpm * 0.0016666666667f;
+    float gearRatio = dt->rpm * RPM_MULTIPLIER;
 
     // Convert Rotations to Wheel Degrees
     // Multiply by gearRatio converts motor degrees to wheel degrees

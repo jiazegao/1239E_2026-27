@@ -27,6 +27,8 @@ private:
     static constexpr float MAX_VELO_RESAMPLE = 100.0f;
     static constexpr int LOG_AMOUNT = 1;
     static constexpr int LOG_RATIO = PARTICLE_COUNT / LOG_AMOUNT;
+    static constexpr float ODOM_MULTIPLIER = 0.25f;
+    static constexpr float RPM_MULTIPLIER = 0.0016666666667f;
 
     static constexpr float MAX_RANGE = 100.0f;
     static constexpr float DIST_RESAMPLE_VARIANCE = 1.2f;
