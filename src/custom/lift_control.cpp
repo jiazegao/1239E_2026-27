@@ -55,9 +55,6 @@ float effectorTargetDeg = 0.0;
 float EFFECTOR_GEAR_RATIO = 4.0;
 bool hardResettingEffector = false;
 
-enum EFFECTOR_STAGES {IDLE, RIGHT_ANGLE, HIGH_ANGLE};
-constexpr float EFFECTOR_ANGLES[3] = {0.0, 97.0, 110.0};
-
 void initEffectorMacro() {
     effectorMacroTask = new pros::Task ([](){
         while (true) {
@@ -84,8 +81,8 @@ void hardResetEffector() {
     });
 }
 
-void setEffector(float newTargetDeg) {
-    if (!hardResettingEffector) effectorTargetDeg = newTargetDeg;
+void setEffector(EFFECTOR_STAGES newTargetEnum) {
+    if (!hardResettingEffector) effectorTargetDeg = EFFECTOR_ANGLES[newTargetEnum];
 }
 
 void resetEffector() {
@@ -109,8 +106,26 @@ void updateLiftMotors() {
     else stopLift();
 
     // Effector Rotation
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) setEffector(EFFECTOR_ANGLES[EFFECTOR_STAGES::HIGH_ANGLE]);
-    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) setEffector(EFFECTOR_ANGLES[EFFECTOR_STAGES::RIGHT_ANGLE]);
-    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) setEffector(EFFECTOR_ANGLES[EFFECTOR_STAGES::IDLE]);
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) setEffector(TOGGLE_ANGLE);
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) setEffector(RIGHT_ANGLE);
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) setEffector(IDLE_ANGLE);
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) hardResetEffector();
+}
+
+void effectorToggle() {
+    pros::Task([](){
+        startEffectorIntake();
+        pros::delay(400);
+        stopEffectorIntake();
+    });
+}
+
+void scoreObject() {
+    pros::Task([](){
+        setEffector(RIGHT_ANGLE);
+        pros::delay(200);
+        reverseEffectorIntake();
+        pros::delay(100);
+        setEffector(HIGH_ANGLE);
+    });
 }

@@ -184,8 +184,9 @@ inline Circle_Obstacle alliance_base2(47.0, 23.5, 4.0);
 inline Circle_Obstacle alliance_base3(-23.5, -47.0, 4.0);
 inline Circle_Obstacle alliance_base4(-47.0, -23.5, 4.0);
 
-// MCL obstacles
-/* ADD LATER BASED ON NEED*/
+inline std::vector<Line_> autonObstacles = {
+    {{-72.0, 72.0}, {72.0, -72.0}}
+};
 
 // Disable Line
 inline Line_Obstacle disableLine(-72.0, 72.0, 72.0, -72.0);
