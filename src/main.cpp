@@ -42,6 +42,10 @@ void opcontrol() {
 	//startBrainCoordDisplay();
 	startMclBenchmark();
 
+	hardResetEffector();
+	pros::delay(3000);
+	setEffector(90.0);
+
 
 	while (true) {
 
