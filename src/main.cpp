@@ -40,12 +40,8 @@ void autonomous() {
 void opcontrol() {
 
 	//startBrainCoordDisplay();
+	pros::delay(300);
 	startMclBenchmark();
-
-	hardResetEffector();
-	pros::delay(5000);
-	setEffector(90.0);
-
 
 	while (true) {
 

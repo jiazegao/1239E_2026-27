@@ -34,15 +34,15 @@ private:
     static constexpr float DIST_RESAMPLE_VARIANCE = 1.2f;
     static constexpr float THETA_RESAMPLE_VARIANCE = 0.0f; //0.005f;
     static constexpr float MAX_THETA_DEVIATION = 0.0f; //0.08f;
-    static constexpr int CONFIDENCE_THRESHOLD = 20;
+    static constexpr int CONFIDENCE_THRESHOLD = 10;
     static constexpr float CONFIDENCE_SCALING_BASE = 32.0f;
-    static constexpr float RIGHT_ANG_MULTIPLIER = 0.0f;
+    static constexpr float RIGHT_ANG_MULTIPLIER = 0.5f;
     static constexpr float RIGHT_ANG_CONST = 2.0 / M_PI * RIGHT_ANG_MULTIPLIER;
-    static constexpr float SENSOR_COUNT_SCALING = 0.15f;
+    static constexpr float SENSOR_COUNT_SCALING = 0.20f;
     
-    static constexpr float TRACKING_WHEEL_VARIANCE = 0.06f;
+    static constexpr float TRACKING_WHEEL_VARIANCE = 0.05f;
     static constexpr float IMU_VARIANCE = 0.0f; //0.002f;
-    static constexpr float FAULT_TOLERANCE = 0.005f;
+    static constexpr float FAULT_TOLERANCE = 0.01f;
     float DIST_SYNC_PROP = 0.00f;
     static constexpr float THETA_SYNC_PROP = 0.000f;
     static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.02f;
