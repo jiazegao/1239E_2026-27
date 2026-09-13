@@ -188,7 +188,7 @@ void startMclBenchmark(float x, float y, float theta, float autoReset) {
 
 void startMcl(float x, float y, float vexTheta, bool resetFront, bool resetLeft, bool resetBack, bool resetRight) {
     // Reset Chassis and RCL
-    lemlib::Pose p(x,y,vexTheta);
+    lemlib::Pose p(x, y, vexTheta);
     chassis.setPose(x, y, vexTheta);
 	RclMain.setRclPose(p);
     

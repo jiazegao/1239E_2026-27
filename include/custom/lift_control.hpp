@@ -20,18 +20,19 @@ void lowerEffector(int velocity = 127);
 void stopEffector();
 
 // ----------------- BASIC MOTOR MACROS -----------------
-enum EFFECTOR_STAGES {IDLE_ANGLE, RIGHT_ANGLE, TOGGLE_ANGLE, HIGH_ANGLE};
-constexpr float EFFECTOR_ANGLES[4] = {0.0, 97.0, 110.0, 130.0};
+enum EFFECTOR_STAGES {IDLE_ANGLE, LOW_ANGLE, RIGHT_ANGLE, TOGGLE_ANGLE, HIGH_ANGLE};
+constexpr float EFFECTOR_ANGLES[5] = {0.0, 60.0, 97.0, 105.0, 180.0};
 
 void initEffectorMacro();
 /*
     - Must be called within void initialize()
     - Starts the pros::Task that manages effector setpose macro
 */
-void setEffector(float newTargetDeg);
+void setEffector(EFFECTOR_STAGES newTargetEnum);
 void resetEffector();
 void hardResetEffector();
 void effectorToggle();
-void scoreObject();
+void scoreCup();
+void scorePin();
 
 void updateLiftMotors();

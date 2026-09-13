@@ -27,6 +27,7 @@ void initialize() {
 
 	//chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::deg);
+	hardResetEffector();
 }
 
 void disabled() {}
@@ -35,6 +36,8 @@ void competition_initialize() {}
 
 void autonomous() {
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+
+	blueLeft();
 }
 
 void opcontrol() {

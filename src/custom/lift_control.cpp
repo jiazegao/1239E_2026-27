@@ -73,10 +73,9 @@ void hardResetEffector() {
         pros::delay(200);
         effectorRotateMotor.move(-127);
         pros::delay(1000);
-        Timer t1(1000);
-        while (!t1.timeIsUp() && effectorRotateMotor.get_actual_velocity() > 0.01) {pros::delay(50);}
         effectorRotateMotor.set_zero_position(0.0);
         hardResettingEffector = false;
+        effectorTargetDeg = 0.0;
         effectorRotateMotor.move(0);
     });
 }
@@ -114,18 +113,30 @@ void updateLiftMotors() {
 
 void effectorToggle() {
     pros::Task([](){
-        startEffectorIntake();
+        reverseEffectorIntake();
+        pros::delay(800);
+        stopEffectorIntake();
+    });
+}
+
+void scoreCup() {
+    pros::Task([](){
+        setEffector(IDLE_ANGLE);
+        pros::delay(400);
+        reverseEffectorIntake();
+        pros::delay(100);
+        setEffector(HIGH_ANGLE);
         pros::delay(400);
         stopEffectorIntake();
     });
 }
 
-void scoreObject() {
+void scorePin() {
     pros::Task([](){
         setEffector(RIGHT_ANGLE);
-        pros::delay(200);
+        pros::delay(400);
         reverseEffectorIntake();
-        pros::delay(100);
-        setEffector(HIGH_ANGLE);
+        pros::delay(400);
+        stopEffectorIntake();
     });
 }

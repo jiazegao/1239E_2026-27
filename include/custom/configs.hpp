@@ -75,7 +75,7 @@ inline pros::MotorGroup leftMotors({10, 9}, pros::MotorGearset::blue);
 inline pros::MotorGroup rightMotors({-19, -17}, pros::MotorGearset::blue);
 inline pros::MotorGroup liftMotors({-7, 21}, pros::MotorGearset::blue);
 inline pros::Motor frontIntakeMotor(20, pros::MotorGearset::blue);
-inline pros::Motor effectorIntakeMotor(6, pros::MotorGearset::green);
+inline pros::Motor effectorIntakeMotor(-5, pros::MotorGearset::green);
 inline pros::Motor effectorRotateMotor(-4, pros::MotorGearset::green);
 inline lemlib::PID effectorPID(1.2, 0.0, 0.5);
 
@@ -185,8 +185,9 @@ inline Circle_Obstacle alliance_base3(-23.5, -47.0, 4.0);
 inline Circle_Obstacle alliance_base4(-47.0, -23.5, 4.0);
 
 inline std::vector<Line_> autonObstacles = {
-    {{-72.0, 72.0}, {72.0, -72.0}}
+    {{-72.0, 72.0}, {32.0, -32.0}},
+    {{32.0, 32.0}, {-72.0, -72.0}}
 };
 
 // Disable Line
-inline Line_Obstacle disableLine(-72.0, 72.0, 72.0, -72.0);
+// inline Line_Obstacle disableLine(-72.0, 72.0, 72.0, -72.0);
