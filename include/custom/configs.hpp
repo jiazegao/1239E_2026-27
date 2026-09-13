@@ -78,6 +78,7 @@ inline pros::Motor frontIntakeMotor(20, pros::MotorGearset::blue);
 inline pros::Motor effectorIntakeMotor(-5, pros::MotorGearset::green);
 inline pros::Motor effectorRotateMotor(-4, pros::MotorGearset::green);
 inline lemlib::PID effectorPID(1.2, 0.0, 0.5);
+inline lemlib::PID liftPID(1.2, 0.0, 0.5);
 
 inline lemlib::Drivetrain drivetrain(&leftMotors,
                               &rightMotors,

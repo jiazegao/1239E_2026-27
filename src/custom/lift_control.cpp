@@ -50,13 +50,12 @@ void stopEffector() {
     effectorRotateMotor.move(0);
 }
 
-pros::Task* effectorMacroTask;
+pros::Task* effectorPIDTask = nullptr;
 float effectorTargetDeg = 0.0;
-float EFFECTOR_GEAR_RATIO = 4.0;
+constexpr float EFFECTOR_GEAR_RATIO = 4.0;  // Deg motor / Deg end effector
 bool hardResettingEffector = false;
-
-void initEffectorMacro() {
-    effectorMacroTask = new pros::Task ([](){
+void initEffectorPID() {
+    effectorPIDTask = new pros::Task ([](){
         while (true) {
             if (!hardResettingEffector) {
                 float output = effectorPID.update(effectorTargetDeg*EFFECTOR_GEAR_RATIO - effectorRotateMotor.get_position());
@@ -84,31 +83,100 @@ void setEffector(EFFECTOR_STAGES newTargetEnum) {
     if (!hardResettingEffector) effectorTargetDeg = EFFECTOR_ANGLES[newTargetEnum];
 }
 
+void setEffector(float newTargetDeg) {
+    if (!hardResettingEffector) effectorTargetDeg = newTargetDeg;
+}
+
 void resetEffector() {
     if (!hardResettingEffector) effectorTargetDeg = 0.0;
 }
 
+pros::Task* liftMacroTask = nullptr;
+float liftTargetHeight = 0.0;
+constexpr float LIFT_GEAR_RATIO = 31.706;  // Deg / Inch height
+bool hardResettingLift = false;
+void initLiftPID() {
+    liftMacroTask = new pros::Task ([](){
+        while (true) {
+            if (!hardResettingLift) {
+                float output = liftPID.update(liftTargetHeight*LIFT_GEAR_RATIO - liftMotors.get_position());
+                liftMotors.move(output);
+            }
+            pros::delay(20);
+        }
+    });
+}
+
+void setLift(LIFT_STAGES newTargetEnum) {
+    if (!hardResettingLift) liftTargetHeight = LIFT_HEIGHTS[newTargetEnum];
+}
+
+void setLift(float newTargetInch) {
+    if (!hardResettingLift) liftTargetHeight = newTargetInch;
+}
+
+void resetLift() {
+    if (!hardResettingLift) liftTargetHeight = 0.0;
+}
+
+pros::Task* L2Macro = nullptr;
+pros::Task* L1Macro = nullptr;
+bool L2MacroInitializing = false;
 void updateLiftMotors() {
-    // Front Intake
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) startFrontIntake();
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) reverseFrontIntake();
-    else stopFrontIntake();
 
-    // Effector Intake
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) startEffectorIntake();
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) reverseEffectorIntake();
-    else stopEffectorIntake();
+    // L2 Macro - Reset lift & end effector, then intake and spin end effector
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+        if (L2Macro != nullptr) L2Macro->remove();
+        L2Macro = new pros::Task([](){
+            L2MacroInitializing = true;
+            stopEffectorIntake();
+            stopFrontIntake();
+            resetLift();
+            resetEffector();
+            pros::delay(500);
+            startFrontIntake();
+            startEffectorIntake();
+            L2MacroInitializing = false;
+        });
+    }
 
-    // Lift
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) raiseLift();
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) lowerLift();
-    else stopLift();
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !L2MacroInitializing) {
+        startFrontIntake();
+        startEffectorIntake();
+    }
 
-    // Effector Rotation
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) setEffector(TOGGLE_ANGLE);
-    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) setEffector(RIGHT_ANGLE);
-    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) setEffector(IDLE_ANGLE);
-    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) hardResetEffector();
+    // L1 Macro - Outtake end effector for 500ms, then lift up end effector
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+        if (L1Macro != nullptr) L1Macro->remove();
+        L1Macro = new pros::Task([](){
+            reverseEffectorIntake();
+            pros::delay(500);
+            setEffector(HIGH_ANGLE);
+        });
+    }
+
+    // R1 Macro - Prime end effector (horizontal), then lift on hold
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+        setEffector(RIGHT_ANGLE);
+        raiseLift();
+    }
+
+    // R2 Macro - Lower lift on hold
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        lowerLift();
+    }
+
+    // B Macro - Outtake both front intake and end effector
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+        reverseFrontIntake();
+        reverseEffectorIntake();
+    }
+
+    // Down Macro - Toggle using end effector
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+        setEffector(TOGGLE_ANGLE);
+        reverseEffectorIntake(60);
+    }
 }
 
 void effectorToggle() {

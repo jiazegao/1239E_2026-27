@@ -22,11 +22,13 @@ void initialize() {
 	//init_auton_selector();
 	//initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
-	initEffectorMacro();
+	initEffectorPID();
+	initLiftPID();
 	//initBrainDisplay();
 
 	//chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::deg);
+	liftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	hardResetEffector();
 }
 
@@ -41,10 +43,6 @@ void autonomous() {
 }
 
 void opcontrol() {
-
-	//startBrainCoordDisplay();
-	pros::delay(300);
-	startMclBenchmark();
 
 	while (true) {
 
