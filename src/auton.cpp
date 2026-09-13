@@ -46,7 +46,10 @@ void blueLeft() {
     pros::delay(1000);
     RclMain.setRclPose({60.0, 0, chassis.getPose().theta});
     chassis.setPose(60.0, 0, chassis.getPose().theta);
-    MclMain.set_pose(RclMain.updateBotPose(&frontL_rcl).second, RclMain.updateBotPose(&left_rcl).second, chassis.getPose().theta);
+    RclMain.updateBotPose(&frontL_rcl);
+    RclMain.updateBotPose(&left_rcl);
+    auto p_ = chassis.getPose();
+    MclMain.set_pose(p_.x, p_.y, p_.theta);
 
     moveForward(20, 800, 127, 50, true);
     chassis.turnToPoint(47, 23.5, 400, {.forwards=false}, true);

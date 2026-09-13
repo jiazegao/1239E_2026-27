@@ -146,6 +146,9 @@ MclTracking::MclTracking(lemlib::Chassis* chassis, lemlib::Drivetrain* dt, std::
 }
 
 void MclTracking::predict() {
+    // Refresh noise
+    noise_idx = gen() & NOISE_MASK;
+
     // Update theta deviation
     float currentImuTheta = vexToStd(chassis->getPose().theta);
 
@@ -455,6 +458,9 @@ void MclTracking::update_weights() {
 }
 
 void MclTracking::resample() {
+    // Refresh noise
+    noise_idx = gen() & NOISE_MASK;
+    
     auto& particles = *particles_ptr;
     auto& new_gen = *new_gen_ptr;
 
