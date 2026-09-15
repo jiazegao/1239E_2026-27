@@ -26,13 +26,11 @@ void initialize() {
 	initLiftPID();
 	//initBrainDisplay();
 
-	//chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::degrees);
 	liftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	liftMotors.set_encoder_units(pros::MotorEncoderUnits::degrees);
 	liftMotors.set_zero_position(0.0);
-
-	hardResetEffector();
 }
 
 void disabled() {}
@@ -40,12 +38,15 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-
+	enableLiftPID = true;
+	
+	hardResetEffector();
 	blueLeft();
 }
 
 void opcontrol() {
+
+	hardResetEffector();
 
 	while (true) {
 

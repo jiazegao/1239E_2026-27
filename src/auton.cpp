@@ -10,60 +10,69 @@
 #include "pros/rtos.hpp"
 #include <cmath>
 
+void toggle() {
+    moveForward(15, 400, 127, 30, true);
+    moveForward(-5, 300, 127, 30, true);
+}
+
 void blueLeft() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    chassis.setPose(60, 0, 270);
-    startMcl(60, 0, 270, false, false, true, false);
+    chassis.setPose(60, 0, 90);
     MclMain.setObstacles(&autonObstacles, nullptr);
+    startMcl(60, 0, 90, true, false, false, false);
+
+    // Toggle
+    toggle();
+    toggle();
 
     // Get cup
-    chassis.moveToPoint(19, 0, 1600, {.minSpeed=80}, true);
+    moveForward(-9, 500, 127, 1, true);
+    chassis.turnToHeading(270, 800, {}, true);
+    chassis.moveToPoint(15, 0, 1400, {.minSpeed=80}, true);
     pros::delay(200);
     hardResetEffector();
     pros::delay(400);
     startFrontIntake();
     startEffectorIntake();
-    pros::delay(1000);
+    pros::delay(600);
 
     // Score pin + cup on neutral base
     chassis.turnToPoint(47, -23.5, 500, {.forwards=false}, true);
-    pros::delay(1000);
-    chassis.moveToPoint(47, -23.5, 1200, {.forwards=false, .maxSpeed=80}, true);
-    scoreCup();
+    moveForward(2, 500, 40, 1, true);
+    chassis.moveToPoint(47, -23.5, 1200, {.forwards=false, .maxSpeed=90}, true);
+    pros::delay(200);
+    setEffector(RIGHT_ANGLE);
+    pros::delay(200);
+    setLift(11);
     pros::delay(600);
+    scoreCup(15);
+    pros::delay(1100);
 
     // Grab pin
-    chassis.turnToHeading(260, 600, {}, true);
-    pros::delay(400);
+    leftMotors.move(-127);
+    rightMotor.move(30);
+    pros::delay(500);
+    leftMotors.move(0);
+    rightMotors.move(0);
+    moveForward(15, 2000, 50, 1, true);
     resetEffector();
+    pros::delay(200);
+    resetLift();
     startFrontIntake();
     startEffectorIntake();
-    moveForward(6.5, 800, 90, 1, true);
-    chassis.turnToPoint(58, 0, 600, {}, true);
-    chassis.moveToPoint(58, 0, 1200, {}, true);
-    chassis.turnToHeading(90, 600, {}, true);
 
-    pros::delay(1000);
-    RclMain.setRclPose({60.0, 0, chassis.getPose().theta});
-    chassis.setPose(60.0, 0, chassis.getPose().theta);
-    RclMain.updateBotPose(&frontL_rcl);
-    RclMain.updateBotPose(&left_rcl);
-    auto p_ = chassis.getPose();
-    MclMain.set_pose(p_.x, p_.y, p_.theta);
-
-    moveForward(20, 800, 127, 50, true);
+    // Score pin
     chassis.turnToPoint(47, 23.5, 400, {.forwards=false}, true);
-    chassis.moveToPoint(47, 23.5, 1500, {.forwards=false, .maxSpeed=80}, true);
-    pros::delay(600);
-    setEffector(HIGH_ANGLE);
+    chassis.moveToPoint(47, 23.5, 1500, {.forwards=false, .maxSpeed=100}, true);
+    pros::delay(800);
+    setEffector(RIGHT_ANGLE);
     pros::delay(900);
     scorePin();
     pros::delay(600);
 
     // Grab pin and cup
-    chassis.moveToPoint(40, 8, 1500, {.maxSpeed=80}, true);
-    pros::delay(1200);
-    chassis.turnToPoint(25, 23.5, 600, {.forwards=false}, true);
+    chassis.moveToPoint(40, 8, 1000, {.maxSpeed=80}, true);
+    chassis.turnToPoint(25, 23.5, 500, {.forwards=false}, true);
     setEffector(HIGH_ANGLE);
     chassis.moveToPoint(25, 23.5, 1500, {.forwards=false, .maxSpeed=45}, true);
     startEffectorIntake();
@@ -74,10 +83,9 @@ void blueLeft() {
 
     // Score again
     chassis.turnToPoint(47, 23.5, 400, {.forwards=false}, true);
+    setEffector(RIGHT_ANGLE);
     chassis.moveToPoint(47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, true);
-    pros::delay(300);
-    setEffector(HIGH_ANGLE);
-    pros::delay(700);
-    scoreCup();
+    setLift(11);
     pros::delay(600);
+    scoreCup(15);
 }

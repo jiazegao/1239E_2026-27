@@ -126,7 +126,7 @@ void updateLiftMotors() {
         effectorIntakeOccupied = true;
         L1Macro = pros::Task([](){
             reverseEffectorIntake();
-            pros::delay(500);
+            pros::delay(300);
             setEffector(HIGH_ANGLE);
             effectorIntakeOccupied = false;
         });
@@ -188,22 +188,20 @@ void effectorToggle() {
     });
 }
 
-void scoreCup() {
-    pros::Task([](){
-        setEffector(IDLE_ANGLE);
-        pros::delay(400);
+// Lift end effector and lift before calling this
+void scoreCup(int height) {
+    pros::Task([height](){
+        resetLift();
+        while (liftMotors.get_position() > 100) {pros::delay(30);}
         reverseEffectorIntake();
-        pros::delay(100);
-        setEffector(HIGH_ANGLE);
-        pros::delay(400);
-        stopEffectorIntake();
+        pros::delay(500);
+        setLift(height);
     });
 }
 
+// Set effector to right angle before calling this
 void scorePin() {
     pros::Task([](){
-        setEffector(RIGHT_ANGLE);
-        pros::delay(400);
         reverseEffectorIntake();
         pros::delay(400);
         stopEffectorIntake();

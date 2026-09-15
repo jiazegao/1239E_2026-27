@@ -38,7 +38,7 @@ void setEffector(float newTargetDeg);
 void resetEffector();
 void hardResetEffector();
 void effectorToggle();
-void scoreCup();
+void scoreCup(int height);
 void scorePin();
 
 void initLiftPID();
