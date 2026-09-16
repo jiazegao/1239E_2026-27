@@ -26,7 +26,6 @@ void initialize() {
 	initLiftPID();
 	//initBrainDisplay();
 
-	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::degrees);
 	liftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	liftMotors.set_encoder_units(pros::MotorEncoderUnits::degrees);
@@ -39,6 +38,7 @@ void competition_initialize() {}
 
 void autonomous() {
 	enableLiftPID = true;
+	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	
 	hardResetEffector();
 	blueLeft();
@@ -46,14 +46,15 @@ void autonomous() {
 
 void opcontrol() {
 
-	hardResetEffector();
+	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+	enableLiftPID = false;
 
 	while (true) {
 
 		updateTankDrive();
 		updateLiftMotors();
-		pros::lcd::print(0, "Effector Motor Pos: %f", effectorRotateMotor.get_position());
-		pros::lcd::print(1, "Lift Motor Pos: %f", liftMotors.get_position());
+		// pros::lcd::print(0, "Effector Motor Pos: %f", effectorRotateMotor.get_position());
+		// pros::lcd::print(1, "Lift Motor Pos: %f", liftMotors.get_position());
 
 		pros::delay(20);
 	}

@@ -189,13 +189,13 @@ void effectorToggle() {
 }
 
 // Lift end effector and lift before calling this
-void scoreCup(int height) {
-    pros::Task([height](){
-        resetLift();
-        while (liftMotors.get_position() > 100) {pros::delay(30);}
+void scoreCup(float dropHeight, float raiseHeight) {
+    pros::Task([dropHeight, raiseHeight](){
+        setLift(dropHeight);
+        while (liftMotors.get_position() > dropHeight*LIFT_GEAR_RATIO+100) {pros::delay(20);}
         reverseEffectorIntake();
-        pros::delay(500);
-        setLift(height);
+        pros::delay(100);
+        setLift(raiseHeight);
     });
 }
 
