@@ -8,7 +8,7 @@ void reverseFrontIntake(int velocity = 127);
 void stopFrontIntake();
 
 void startEffectorIntake(int velocity = 200);
-void reverseEffectorIntake(int velocity = 180);
+void reverseEffectorIntake(int velocity = 140);
 void stopEffectorIntake();
 
 void raiseLift(int velocity = 127);
@@ -21,7 +21,7 @@ void stopEffector();
 
 // ----------------- BASIC MOTOR MACROS -----------------
 enum EFFECTOR_STAGES {IDLE_ANGLE, LOW_ANGLE, RIGHT_ANGLE, TOGGLE_ANGLE, HIGH_ANGLE};
-constexpr float EFFECTOR_ANGLES[5] = {0.0, 60.0, 89.0, 105.0, 165.0};
+constexpr float EFFECTOR_ANGLES[5] = {0.0, 60.0, 85.0, 105.0, 165.0};
 
 enum LIFT_STAGES {IDLE_HEIGHT, FIRST_STACK, SECOND_STACK, THIRD_STACK, FOUTH_STACK, FIFTH_STACK};
 constexpr float LIFT_HEIGHTS[6] = {0.0, 10.0, 20.0, 30.0, 40.0, 50.0};    // Needs manual configuration

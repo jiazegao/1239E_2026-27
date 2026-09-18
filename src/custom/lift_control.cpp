@@ -136,13 +136,14 @@ void updateLiftMotors() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
         enableLiftPID = false;
         setEffector(RIGHT_ANGLE);
-        startEffectorIntake();
+        effectorIntakeMotor.move(30);
         if (effectorRotateMotor.get_position() > 320.0) raiseLift();
         if (liftMotors.get_position() > 3300.0) setEffector(TOGGLE_ANGLE);
     }
     // R2 Macro - Lower lift on hold
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
         enableLiftPID = false;
+        effectorIntakeMotor.move(30);
         lowerLift();
         if (liftMotors.get_position() < 3300.0) setEffector(RIGHT_ANGLE);
     }
