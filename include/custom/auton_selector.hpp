@@ -14,7 +14,7 @@ struct AutonEntry {
 };
 
 // Auton Collection
-inline int autonCount = 6;
+inline int autonCount = 0;
 constexpr std::array<AutonEntry, 6> AutonCollection = {{
     {"Left 40", left40},
     {"Right 40", right40},

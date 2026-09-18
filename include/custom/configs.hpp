@@ -185,11 +185,18 @@ inline Circle_Obstacle alliance_base2(47.0, 23.5, 4.0);
 inline Circle_Obstacle alliance_base3(-23.5, -47.0, 4.0);
 inline Circle_Obstacle alliance_base4(-47.0, -23.5, 4.0);
 
-inline std::vector<Line_> autonObstacles = {
+inline std::vector<Line_> leftAutonObstacles = {
     {{-72.0, 72.0}, {32.0, -32.0}},
     {{32.0, 32.0}, {-72.0, -72.0}},
     {{32.0, -32.0}, {32.0, -72.0}},
     {{32.0, 32.0}, {32.0, 72.0}}
+};
+
+inline std::vector<Line_> rightAutonObstacles = {
+    {{-72.0, -72.0}, {32.0, 32.0}},
+    {{32.0, 32.0}, {72.0, 32.0}},
+    {{72.0, -72.0}, {-32.0, 32.0}},
+    {{-32.0, 32.0}, {-72.0, 32.0}}
 };
 
 // Disable Line
