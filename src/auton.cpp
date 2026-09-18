@@ -144,7 +144,7 @@ void right2_1(){
     pros::delay(400);
 
    // Grab pin
-    chassis.moveToPoint(-26, -20, 800);
+    chassis.moveToPoint(-26, -24, 900);
     // rightMotors.move(0);
     // leftMotors.move(80);
     pros::delay(300);
@@ -181,7 +181,7 @@ void right2_1(){
     setEffector(HIGH_ANGLE);
     startEffectorIntake();
 
-    chassis.moveToPoint(-24, 24, 800, {.forwards=false, .maxSpeed=65}, false);
+    chassis.moveToPoint(-22, 26, 900, {.forwards=false, .maxSpeed=65}, false);
 
     // pros::delay(50);
     // rightMotors.move(-20);
@@ -189,6 +189,10 @@ void right2_1(){
 
     setEffector(LOW_ANGLE);
     pros::delay(300);
+   chassis.turnToPoint(-58, 24, 600, {.forwards=false}, true);
+    setEffector(RIGHT_ANGLE);
+    chassis.moveToPoint(-45, 24, 2000, {.forwards=false, .maxSpeed=80}, true);
+    setLift(5);
 }
 
 void right40() {
