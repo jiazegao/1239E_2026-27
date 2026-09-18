@@ -107,7 +107,7 @@ void left40() {
     scoreCup(2, 2);
 }
 
-void right40() {
+void right2_1(){
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.setPose(-60, 0, -90);
     MclMain.setObstacles(&rightAutonObstacles, nullptr);
@@ -123,56 +123,56 @@ void right40() {
     moveForward(-10, 800, 127, 1, true);
     chassis.turnToHeading(-270, 800, {.maxSpeed=100}, true);
     chassis.moveToPoint(-14, 0, 200, {.minSpeed = 100}, true);
-    chassis.moveToPoint(-14, -2, 1200, {.maxSpeed = 60}, true);
+    chassis.moveToPoint(-14, 0, 1000, {.maxSpeed = 60}, true);
     startFrontIntake();
     startEffectorIntake();
 
     // Score pin + cup on neutral base
-    chassis.turnToPoint(-48, -24, 500, {.forwards=false}, true);
-    chassis.moveToPoint(-48, -24, 1400, {.forwards=false, .maxSpeed=75}, true);
+    chassis.turnToPoint(-48, -22, 500, {.forwards=false}, true);
+    chassis.moveToPoint(-48, -22, 1400, {.forwards=false, .maxSpeed=75}, true);
     pros::delay(500);
     setEffector(EFFECTOR_ANGLES[RIGHT_ANGLE]+3.0);
-    pros::delay(300);
-    setLift(8);
-    pros::delay(700);
+    pros::delay(150);
+    setLift(10);
+    pros::delay(850);
     rightMotors.move(-100);
     leftMotors.move(-40);
     scoreCup(2, 15);
     pros::delay(500);
     rightMotors.move(0);
     leftMotors.move(0);
+    pros::delay(400);
+
+   // Grab pin
+    chassis.moveToPoint(-26, -20, 800);
+    // rightMotors.move(0);
+    // leftMotors.move(80);
     pros::delay(300);
-
-    // Grab pin
-
-    rightMotors.move(55);
-    leftMotors.move(65);
-    pros::delay(200);
     resetEffector();
     resetLift();
     startFrontIntake();
     startEffectorIntake();
+    pros::delay(200);
+    // rightMotors.move(65);
+    // leftMotors.move(45);
     pros::delay(400);
-    rightMotors.move(65);
-    leftMotors.move(45);
-    pros::delay(650);
 
     // Score pin
-    chassis.moveToPoint(-47, 10, 900, {.forwards=false}, true);
+    chassis.moveToPoint(-46.5, 10, 1000, {.forwards=false}, true);
     startFrontIntake();
     startEffectorIntake();
     chassis.turnToHeading(-180, 200, {}, true);
-    chassis.moveToPoint(-47, 23.5, 800, {.forwards=false, .maxSpeed=60}, true);
+    chassis.moveToPoint(-46.5, 23.5, 800, {.forwards=false, .maxSpeed=60}, true);
     pros::delay(200);
     reverseFrontIntake();
     setEffector(EFFECTOR_ANGLES[RIGHT_ANGLE]+4.0);
-    pros::delay(600);
+    pros::delay(650);
     stopEffectorIntake();
     rightMotors.move(-50);
     leftMotors.move(-50);
     scorePin();
 
-    pros::delay(400);
+    pros::delay(200);
     stopFrontIntake();
 
     // Grab pin and cup
@@ -189,12 +189,96 @@ void right40() {
 
     setEffector(LOW_ANGLE);
     pros::delay(300);
+}
+
+void right40() {
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+    chassis.setPose(-60, 0, -90);
+    MclMain.setObstacles(&rightAutonObstacles, nullptr);
+    startMcl(-60, 0, -90, true, false, false, false);
+
+    // Toggle
+    moveForward(15, 300, 127, 100, true);
+    moveForward(-5, 300, 127, 60, true);
+    moveForward(15, 500, 127, 100, true);
+    hardResetEffector();
+
+    // Get cup
+    moveForward(-10, 800, 127, 1, true);
+    chassis.turnToHeading(-270, 800, {.maxSpeed=100}, true);
+    chassis.moveToPoint(-14, 0, 200, {.minSpeed = 100}, true);
+    chassis.moveToPoint(-14, -2, 1000, {.maxSpeed = 60}, true);
+    startFrontIntake();
+    startEffectorIntake();
+
+    // Score pin + cup on neutral base
+    chassis.turnToPoint(-48, -22, 500, {.forwards=false}, true);
+    chassis.moveToPoint(-48, -22, 1400, {.forwards=false, .maxSpeed=75}, true);
+    pros::delay(500);
+    setEffector(EFFECTOR_ANGLES[RIGHT_ANGLE]+3.0);
+    pros::delay(150);
+    setLift(10);
+    pros::delay(850);
+    rightMotors.move(-100);
+    leftMotors.move(-40);
+    scoreCup(2, 15);
+    pros::delay(500);
+    rightMotors.move(0);
+    leftMotors.move(0);
+    pros::delay(300);
+
+   // Grab pin
+    //chassis.swingToPoint(-26, -20, lemlib::DriveSide::RIGHT, 800);
+    rightMotors.move(60);
+    leftMotors.move(60);
+    pros::delay(200);
+    resetEffector();
+    resetLift();
+    startFrontIntake();
+    startEffectorIntake();
+    pros::delay(200);
+    // rightMotors.move(65);
+    // leftMotors.move(45);
+    pros::delay(400);
+
+    // Score pin
+    chassis.moveToPoint(-46.5, 10, 1000, {.forwards=false}, true);
+    startFrontIntake();
+    startEffectorIntake();
+    chassis.turnToHeading(-180, 200, {}, true);
+    chassis.moveToPoint(-46.5, 23.5, 800, {.forwards=false, .maxSpeed=60}, true);
+    pros::delay(200);
+    reverseFrontIntake();
+    setEffector(EFFECTOR_ANGLES[RIGHT_ANGLE]+4.0);
+    pros::delay(650);
+    stopEffectorIntake();
+    rightMotors.move(-50);
+    leftMotors.move(-50);
+    scorePin();
+
+    pros::delay(400);
+    stopFrontIntake();
+
+    // Grab pin and cup
+    chassis.moveToPoint(-40, 8, 1300, {.maxSpeed=60}, true);
+    chassis.turnToPoint(-23, 15, 500, {.forwards=false}, true);
+    setEffector(HIGH_ANGLE);
+    startEffectorIntake();
+
+    chassis.moveToPoint(-24, 24, 1000, {.forwards=false, .maxSpeed=65}, false);
+
+    // pros::delay(50);
+    // rightMotors.move(-20);
+    // leftMotors.move(-20);
+
+    setEffector(LOW_ANGLE);
+    pros::delay(300);
 
     // Score again
-    chassis.turnToPoint(-47, 23.5, 400, {.forwards=false}, true);
+    chassis.turnToPoint(-47, 24, 600, {.forwards=false}, true);
     setEffector(RIGHT_ANGLE);
-    chassis.moveToPoint(-47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, true);
-    setLift(8);
+    chassis.moveToPoint(-47, 24, 2000, {.forwards=false, .maxSpeed=80}, true);
+    setLift(5);
     pros::delay(500);
     scoreCup(2, 2);
 }
