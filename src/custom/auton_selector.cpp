@@ -68,7 +68,7 @@ void init_auton_selector() {
 void runAuton() {
     // Auton Selection
 	if (runningSkills) {
-		// SKILLS FUNC
+		skills();
 		return;
 	}
     if (autonCount >= 0 && autonCount < (int)AutonCollection.size()) {

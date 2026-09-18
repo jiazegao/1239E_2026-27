@@ -15,12 +15,12 @@
 #include "custom/lift_control.hpp"
 
 void initialize() {
-	pros::lcd::initialize();
+	// pros::lcd::initialize();
     chassis.calibrate();
     chassis.setPose(0, 0, 0);
 
-	//init_auton_selector();
-	//initControllerDisplay();
+	// init_auton_selector();
+	initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
 	initEffectorPID();
 	initLiftPID();
@@ -41,20 +41,20 @@ void autonomous() {
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	
 	hardResetEffector();
-	blueLeft40();
+	left3_1();
+	// runAuton();
 }
 
 void opcontrol() {
 
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	enableLiftPID = false;
+	startBrainFBDisplay();
 
 	while (true) {
 
 		updateTankDrive();
 		updateLiftMotors();
-		// pros::lcd::print(0, "Effector Motor Pos: %f", effectorRotateMotor.get_position());
-		// pros::lcd::print(1, "Lift Motor Pos: %f", liftMotors.get_position());
 
 		pros::delay(20);
 	}

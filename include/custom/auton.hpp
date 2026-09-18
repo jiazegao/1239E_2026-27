@@ -4,7 +4,12 @@
 #include "custom/configs.hpp"
 #include "custom/util_funcs.hpp"
 
-void blueLeft40();
-void blueLeft30();
-void auto3_1();
+void left40();
+void left30();
+void left3_1();
+
+void right40();
+void right30();
+void right3_1();
+
 void skills();
