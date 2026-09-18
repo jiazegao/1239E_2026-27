@@ -19,7 +19,7 @@ void initialize() {
     chassis.calibrate();
     chassis.setPose(0, 0, 0);
 
-	// init_auton_selector();
+	init_auton_selector();
 	initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
 	initEffectorPID();
@@ -41,7 +41,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	
 	hardResetEffector();
-	left3_1();
+	right40();
 	// runAuton();
 }
 
