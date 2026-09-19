@@ -11,5 +11,6 @@ void right2_1();
 void right40();
 void right30();
 void right3_1();
+void alliance1pin();
 
 void skills();
