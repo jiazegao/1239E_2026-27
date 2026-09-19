@@ -41,7 +41,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	
 	hardResetEffector();
-	//right2_1();
+	// left30();
 	runAuton();
 }
 
