@@ -178,7 +178,17 @@ void updateLiftMotors() {
     else {
         stopFrontIntake();
         if (!effectorIntakeOccupied && !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) stopEffectorIntake();
+
+        // Y only changes the angle when no existing mechanism macro owns it.
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y) &&
+            !effectorIntakeOccupied &&
+            !controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) &&
+            !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) &&
+            !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            setEffector(PIN_ANGLE);
+        }
     }
+
 }
 
 void effectorToggle() {
