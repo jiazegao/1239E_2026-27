@@ -22,7 +22,8 @@ void left40() {
     startMcl(60, 0, 90, true, false, false, false);
 
     // Toggle
-    moveForward(15, 300, 127, 100, true);
+    moveForward(-5, 300, 127, 60, true);
+    moveForward(15, 600, 127, 100, true);
     moveForward(-5, 300, 127, 60, true);
     moveForward(15, 500, 127, 100, true);
     hardResetEffector();
@@ -297,18 +298,20 @@ void left30() {
     chassis.setPose(60, 0, 90);
     MclMain.setObstacles(&leftAutonObstacles, nullptr);
     startMcl(60, 0, 90, true, false, false, false);
+    startFrontIntake();
 
     // Toggle
     moveForward(-5, 300, 127, 60, true);
     moveForward(15, 600, 127, 100, true);
     moveForward(-5, 300, 127, 60, true);
-    moveForward(15, 500, 127, 100, true);
+    moveForward(15, 600, 127, 100, true);
     hardResetEffector();
 
-    // Get cup
-    moveForward(-18, 1000, 127, 1, true);
+        // Get cup
+    moveForward(-10, 800, 127, 1, true);
     chassis.turnToHeading(270, 800, {.maxSpeed=100}, true);
-    chassis.moveToPoint(14, 0, 1000, {}, true);
+        chassis.moveToPoint(13.5, -2, 500, {.minSpeed = 100}, true);
+    chassis.moveToPoint(13.5, -2, 1000, {.maxSpeed = 60}, true);
     startFrontIntake();
     startEffectorIntake();
 
@@ -327,28 +330,31 @@ void left30() {
     // Grab pin
     chassis.moveToPoint(40, 8, 1200, {}, true);
     resetLift();
-    startFrontIntake();
+    // startFrontIntake();
     startEffectorIntake();
     chassis.moveToPoint(40, 8, 800, {.maxSpeed=40}, true);
-    resetEffector();
-    chassis.turnToPoint(27, 23.5, 500, {.forwards=false}, true);
+    // resetEffector();
+    reverseFrontIntake();
+    chassis.turnToPoint(24, 23.5, 500, {.forwards=false}, true);
     setEffector(HIGH_ANGLE);
     startEffectorIntake();
-    chassis.moveToPoint(27, 23.5, 1000, {.forwards=false, .maxSpeed=40}, false);
-    // leftMotors.move(-20);
-    // rightMotors.move(-20);
-    setEffector(LOW_ANGLE);
-    pros::delay(650);
-    setEffector(RIGHT_ANGLE);
+    chassis.moveToPoint(23, 25, 300, {.forwards=false}, true);
+        chassis.moveToPoint(23, 25, 500, {.forwards=false, .maxSpeed=40}, false);
+
+    setEffector(EFFECTOR_ANGLES[LOW_ANGLE]-6);
     pros::delay(400);
+    setEffector(RIGHT_ANGLE);
+    pros::delay(300);
 
     // Score again
-    chassis.turnToPoint(47, -24.5, 700, {.forwards=false}, true);
-    chassis.moveToPoint(47, -24.5, 2000, {.forwards=false, .maxSpeed=80}, true);
-    setLift(12);
+    chassis.turnToPoint(45, -26, 700, {.forwards=false}, true);
+    chassis.moveToPoint(45, -26, 2700, {.forwards=false, .maxSpeed=80}, true);
+    setLift(15);
     pros::delay(1500);
-    scoreCup(3, 3);
-
+    leftMotors.move(10);
+    rightMotors.move(-120);
+    scoreCup(4, 4);
+    
 }
 void right30() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
@@ -409,33 +415,28 @@ void right30() {
 
 void left3_1(){
     // Count concurrent motion toward a mechanism's time allowance.
-    const auto waitRemaining = [](std::uint32_t started, std::uint32_t duration) {
-        const auto elapsed = pros::millis() - started;
-        if (elapsed < duration) pros::delay(duration - elapsed);
-    };
+
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.setPose(60, 0, 90);
     MclMain.setObstacles(&leftAutonObstacles, nullptr);
     startMcl(60, 0, 90, true, false, false, false);
     // Get toggle 
-    moveForward(15, 300, 127, 100, true);
+        moveForward(-5, 300, 127, 100, true);
+
+    moveForward(15, 600, 127, 100, true);
     moveForward(-5, 300, 127, 60, true);
     moveForward(15, 500, 127, 100, true);
     hardResetEffector();
-    const auto resetStarted = pros::millis();
     // pros::delay(100);
     // Score on alliance base
     chassis.turnToPoint(47, 0, 500, {.forwards=false}, false);
     chassis.moveToPoint(47, 0, 1000, {.forwards=false, .maxSpeed=80, .earlyExitRange = 2}, true);
     chassis.turnToPoint(47, 23.5, 500, {.forwards=false}, false);
     // Homing takes 1200 ms; include one task tick before commanding the effector.
-    waitRemaining(resetStarted, 1220);
     reverseFrontIntake();
-    setEffector(EFFECTOR_ANGLES[RIGHT_ANGLE]+5);
-    const auto openingEffectorStarted = pros::millis();
+    setEffector(PIN_ANGLE);
     chassis.moveToPoint(47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, false);
-    waitRemaining(openingEffectorStarted, 800);
     leftMotors.move(-65);
     rightMotors.move(-65);
     scorePin();
@@ -444,32 +445,33 @@ void left3_1(){
     // setEffector(RIGHT_ANGLE);
      
     // Grab pin and cup
-    chassis.moveToPoint(40, 8, 1300, {.maxSpeed=60}, true);
-    chassis.turnToPoint(22, 22, 500, {.forwards=false}, true);
+// Grab pin
+    // chassis.moveToPoint(40, 8, 1200, {}, true);
+    resetLift();
+    startFrontIntake();
+    startEffectorIntake();
+    chassis.moveToPoint(46, 8,1000, {.maxSpeed=40}, true);
+    // resetEffector();
+    chassis.turnToPoint(24, 23.5, 500, {.forwards=false}, true);
     setEffector(HIGH_ANGLE);
     startEffectorIntake();
-    chassis.moveToPoint(22, 22, 1200, {.forwards=false, .maxSpeed=40}, false);
-    leftMotors.move(-20);
-    rightMotors.move(-20);
+    chassis.moveToPoint(24, 23.5, 300, {.forwards=false}, true);
+        chassis.moveToPoint(24, 23.5, 500, {.forwards=false, .maxSpeed=40}, false);
     setEffector(LOW_ANGLE);
-    // Stop creeping deeper while the effector finishes grabbing.
-    leftMotors.move(0);
-    rightMotors.move(0);
-    pros::delay(300);
-
+    pros::delay(750);
+    setEffector(RIGHT_ANGLE);
+    pros::delay(400);
     // Lift the effector clear before starting the goal turn.
     leftMotors.move(0);
     rightMotors.move(0);
     setEffector(RIGHT_ANGLE);
     pros::delay(200);
     setLift(8);
-    const auto lift10Started = pros::millis();
     chassis.turnToPoint(47, 23.5, 400, {.forwards=false}, true);
     chassis.moveToPoint(47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, true);
     // Give the goal approach its full travel allowance before lowering.
     pros::delay(1000);
-    waitRemaining(lift10Started, 800);
-    scoreCup(2, 10);
+    scoreCup(2, 8);
     // Allow time to release the cup and lift clear before leaving.
     pros::delay(1000);
   // Go to 2nd stack
@@ -494,13 +496,12 @@ void left3_1(){
     rightMotors.move(0);
     setEffector(RIGHT_ANGLE);
     pros::delay(200);
-    setLift(15);
+    setLift(13);
     const auto lift15Started = pros::millis();
-    chassis.turnToPoint(47, 23.5, 400, {.forwards=false}, true);
-    chassis.moveToPoint(47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, true);
+    chassis.turnToPoint(47, 24, 500, {.forwards=false}, true);
+    chassis.moveToPoint(47, 24, 1500, {.forwards=false, .maxSpeed=80}, true);
     // Give the goal approach its full travel allowance before lowering.
     pros::delay(1000);
-    waitRemaining(lift15Started, 800);
     scoreCup(3, 20);
     pros::delay(1000);
 
@@ -603,86 +604,65 @@ void right3_1(){
 void skills() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.setPose(60, 0, 90);
+    MclMain.setObstacles(&leftAutonObstacles, nullptr);
     startMcl(60, 0, 90, true, false, false, false);
-    // Get toggle 
-    moveForward(15, 300, 127, 100, true);
+
+    // Toggle
+    moveForward(-5, 300, 127, 60, true);
+    moveForward(15, 600, 127, 100, true);
     moveForward(-5, 300, 127, 60, true);
     moveForward(15, 500, 127, 100, true);
     hardResetEffector();
-    pros::delay(100);
-    // Score on alliance base
-    chassis.turnToPoint(47, 0, 500, {.forwards=false}, true);
-    chassis.moveToPoint(47, 0, 1000, {.forwards=false, .maxSpeed=80}, true);
-    chassis.turnToPoint(47, 23.5, 500, {.forwards=false}, true);
-    chassis.moveToPoint(47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, true);
-    pros::delay(200);
-    reverseFrontIntake();
-    setEffector(EFFECTOR_ANGLES[RIGHT_ANGLE]+5.5);
-    pros::delay(1000);
-    leftMotors.move(-55);
-    rightMotors.move(-55);
-    scorePin();
-    pros::delay(400);
-    stopFrontIntake();
-    // setEffector(RIGHT_ANGLE);
-     // Grab pin and cup
-    chassis.moveToPoint(40, 8, 1300, {.maxSpeed=60}, true);
-    chassis.turnToPoint(23.5, 23.5, 500, {.forwards=false}, true);
-    setEffector(HIGH_ANGLE);
+
+        // Get cup
+    moveForward(-10, 800, 127, 1, true);
+    chassis.turnToHeading(270, 800, {.maxSpeed=100}, true);
+    chassis.moveToPoint(14, 0, 1500, {}, true);
+    startFrontIntake();
     startEffectorIntake();
-    chassis.moveToPoint(23.5, 23.5, 1200, {.forwards=false, .maxSpeed=40}, false);
-    leftMotors.move(-20);
-    rightMotors.move(-20);
-    setEffector(IDLE_ANGLE);
-    pros::delay(200);
-    // Stop creeping deeper while the effector finishes grabbing.
-    leftMotors.move(0);
-    rightMotors.move(0);
+
+    // Score pin + cup on neutral base
+    chassis.turnToPoint(47.5, -23.5, 500, {.forwards=false}, true);
+    chassis.moveToPoint(47.5, -23.5, 1600, {.forwards=false, .maxSpeed=75}, true);
+    pros::delay(450);
+    setEffector(RIGHT_ANGLE);
+    pros::delay(300);
+    setLift(12);
     pros::delay(600);
+    scoreCup(2, 15);
+    pros::delay(800);
+        setEffector(HIGH_ANGLE);
 
-    // Lift the effector clear before starting the goal turn.
-    leftMotors.move(0);
-    rightMotors.move(0);
-    setEffector(RIGHT_ANGLE);
-    pros::delay(500);
-    chassis.turnToPoint(47, 23.5, 400, {.forwards=false}, true);
-    chassis.moveToPoint(47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, true);
-    setLift(10);
-    pros::delay(500);
-    scoreCup(2, 10);
-    // Allow time to release the cup and lift clear before leaving.
-    pros::delay(1000);
-  // Go to 2nd stack
-    
-    moveForward(15, 1000, 127, 100, false);
-    setLift(0);
-    chassis.turnToPoint(47, 45, 500, {.forwards=false}, true);
+    // Grab pin
+    chassis.moveToPoint(40, 8, 1200, {}, true);
+    resetLift();
+    startFrontIntake();
+    startEffectorIntake();
+    chassis.moveToPoint(40, 8, 800, {.maxSpeed=40}, true);
+    resetEffector();
+    chassis.turnToPoint(24, 23.5, 500, {.forwards=false}, true);
     setEffector(HIGH_ANGLE);
     startEffectorIntake();
-    chassis.moveToPoint(47, 45, 1400, {.forwards=false, .maxSpeed=60, .minSpeed=30}, false);
-    // Carry speed into the pickup and reach the pin before lowering.
-    leftMotors.move(-30);
-    rightMotors.move(-30);
-    pros::delay(400);
-    leftMotors.move(-20);
-    rightMotors.move(-20);
-    setEffector(IDLE_ANGLE);
-    pros::delay(400);
+    chassis.moveToPoint(24, 23.5, 300, {.forwards=false}, true);
+        chassis.moveToPoint(24, 23.5, 500, {.forwards=false, .maxSpeed=40}, false);
 
-    // Lift the effector clear before starting the goal turn.
-    leftMotors.move(0);
-    rightMotors.move(0);
+    setEffector(LOW_ANGLE);
+    pros::delay(750);
     setEffector(RIGHT_ANGLE);
-    pros::delay(500);
-    chassis.turnToPoint(47, 23.5, 400, {.forwards=false}, true);
-    chassis.moveToPoint(47, 23.5, 1000, {.forwards=false, .maxSpeed=80}, true);
+    pros::delay(400);
+
+    // Score again
+    chassis.turnToPoint(47.5, -24.5, 700, {.forwards=false}, true);
+    chassis.moveToPoint(47.5, -24.5, 2500, {.forwards=false, .maxSpeed=80}, true);
     setLift(15);
-    pros::delay(500);
-    scoreCup(3, 20);
-    pros::delay(1000);
-
-
-
+    pros::delay(1500);
+    leftMotors.move(10);
+    rightMotors.move(-100);
+    scoreCup(4, 4);
+    reverseEffectorIntake();
+    chassis.moveToPoint(47.5, 0, 2000, {}, true);
+    chassis.turnToPoint(10, 0, 500);
+    chassis.moveToPoint(10, 0, 2000);
 }
 
 
