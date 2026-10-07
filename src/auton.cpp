@@ -207,7 +207,8 @@ void right40() {
     startMcl(-60, 0, -90, true, false, false, false);
 
     // Toggle
-    moveForward(15, 300, 127, 100, true);
+        moveForward(-5, 300, 127, 60, true);
+    moveForward(15, 600, 127, 100, true);
     moveForward(-5, 300, 127, 60, true);
     moveForward(15, 500, 127, 100, true);
     hardResetEffector();
@@ -216,7 +217,7 @@ void right40() {
     moveForward(-10, 800, 127, 1, true);
     chassis.turnToHeading(-270, 800, {.maxSpeed=100}, true);
     chassis.moveToPoint(-14, 0, 200, {.minSpeed = 100}, true);
-    chassis.moveToPoint(-14, -2, 1000, {.maxSpeed = 60}, true);
+    chassis.moveToPoint(-14, 0, 1000, {.maxSpeed = 65 }, true);
     startFrontIntake();
     startEffectorIntake();
 
@@ -237,10 +238,10 @@ void right40() {
     pros::delay(300);
 
    // Grab pin
-    //chassis.swingToPoint(-26, -20, lemlib::DriveSide::RIGHT, 800);
-    rightMotors.move(60);
-    leftMotors.move(60);
-    pros::delay(200);
+     chassis.moveToPoint(-35, -20, 800, {.minSpeed = 50, .earlyExitRange = 2}, false);
+     chassis.turnToPoint(-23, -25, 500, {.minSpeed = 80, .earlyExitRange = 1}, false);
+     chassis.moveToPoint(-23, -25, 1200, {.maxSpeed = 70});
+    pros::delay(300);
     resetEffector();
     resetLift();
     startFrontIntake();
@@ -338,8 +339,8 @@ void left30() {
     chassis.turnToPoint(24, 23.5, 500, {.forwards=false}, true);
     setEffector(HIGH_ANGLE);
     startEffectorIntake();
-    chassis.moveToPoint(23, 25, 300, {.forwards=false}, true);
-        chassis.moveToPoint(23, 25, 500, {.forwards=false, .maxSpeed=40}, false);
+    chassis.moveToPoint(24, 21, 300, {.forwards=false}, true);
+        chassis.moveToPoint(24, 21, 400, {.forwards=false, .maxSpeed=40}, false);
 
     setEffector(EFFECTOR_ANGLES[LOW_ANGLE]-6);
     pros::delay(400);
@@ -353,6 +354,7 @@ void left30() {
     pros::delay(1500);
     leftMotors.move(10);
     rightMotors.move(-120);
+    pros::delay(200);
     scoreCup(4, 4);
     
 }
@@ -363,7 +365,8 @@ void right30() {
     startMcl(-60, 0, -90, true, false, false, false);
 
     // Toggle
-    moveForward(15, 300, 127, 100, true);
+        moveForward(-5, 300, 127, 100, true);
+    moveForward(15, 600, 127, 100, true);
     moveForward(-5, 300, 127, 60, true);
     moveForward(15, 500, 127, 100, true);
     hardResetEffector();
@@ -397,19 +400,21 @@ void right30() {
     chassis.turnToPoint(-27, 22.5, 500, {.forwards=false}, true);
     setEffector(HIGH_ANGLE);
     startEffectorIntake();
-    chassis.moveToPoint(-27, 22.5, 1400, {.forwards=false, .maxSpeed=40}, false);
+    chassis.moveToPoint(-27, 22.5, 800, {.forwards=false, .maxSpeed=50}, false);
     leftMotors.move(-20);
     rightMotors.move(-20);
-    setEffector(IDLE_ANGLE);
+    setEffector(LOW_ANGLE);
     pros::delay(650);
     setEffector(RIGHT_ANGLE);
     pros::delay(300);
 
     // Score again
-    chassis.turnToPoint(-47, -24.5, 700, {.forwards=false}, true);
-    chassis.moveToPoint(-47, -24.5, 2000, {.forwards=false, .maxSpeed=80}, true);
-    setLift(20);
-    pros::delay(2000);
+    chassis.turnToPoint(-48, -26, 700, {.forwards=false}, true);
+    chassis.moveToPoint(-48, -26, 2700, {.forwards=false, .maxSpeed=80}, true);
+    setLift(15);
+    pros::delay(1500);
+    leftMotors.move(-100);
+    rightMotors.move(10);
     scoreCup(4, 4);
 }
 
