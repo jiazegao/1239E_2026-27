@@ -25,11 +25,13 @@ public:
         head->next = tail;
     }
 
+    // The list does not own what it holds: obstacles may live in static storage
+    // (see configs.hpp) as well as on the heap, so only the Node containers are
+    // freed here. Use pop/remove with clean=true to delete a heap-allocated payload.
     ~Singly_Linked_List() {
         Node* curr = head;
         while (curr != nullptr) {
             Node* nextNode = curr->next;
-            if (curr->ptr != nullptr) delete curr->ptr;
             delete curr; // This deletes the Node container
             curr = nextNode;
         }
@@ -250,7 +252,13 @@ struct Line {
 class Line_Obstacle {
 public:
 
-    static Singly_Linked_List<Line_Obstacle> obstacleCollection;
+    // Registry of every live Line_Obstacle.
+    // This must be a function-local static rather than a static data member:
+    // the global obstacles in configs.hpp register themselves during static
+    // init, and a data member defined in RclTracking.cpp is not guaranteed to
+    // be constructed before them. It was not, so every registration was
+    // silently dropped. An accessor is constructed on first use instead.
+    static Singly_Linked_List<Line_Obstacle>& obstacleCollection();
 
     Line_Obstacle(float x1, float y1, float x2, float y2, float lifeTimeMs = -1);
     bool expired();
@@ -266,7 +274,9 @@ private:
 class Circle_Obstacle {
 public:
 
-    static Singly_Linked_List<Circle_Obstacle> obstacleCollection;
+    // Registry of every live Circle_Obstacle.
+    // Function-local static for the same reason as Line_Obstacle's.
+    static Singly_Linked_List<Circle_Obstacle>& obstacleCollection();
 
     Circle_Obstacle(float x_, float y_, float r_, float lifeTimeMs = -1);
 

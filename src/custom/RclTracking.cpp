@@ -15,7 +15,10 @@ inline float roundTwoPlaces(float x) {
 }
 
 // Line obstacle class
-Singly_Linked_List<Line_Obstacle> Line_Obstacle::obstacleCollection = Singly_Linked_List<Line_Obstacle>();
+Singly_Linked_List<Line_Obstacle>& Line_Obstacle::obstacleCollection() {
+    static Singly_Linked_List<Line_Obstacle> collection;
+    return collection;
+}
 Line_Obstacle::Line_Obstacle(float x1, float y1, float x2, float y2, float lifeTimeMs)
     : lifeTimer(lifeTimeMs < 0 ? MAX_OBSTACLE_DURATION : lifeTimeMs) {
     // Init line
@@ -27,7 +30,7 @@ Line_Obstacle::Line_Obstacle(float x1, float y1, float x2, float y2, float lifeT
     else line.slope = (y2 - y1) / (x2 - x1);
     line.yIntercept = y1 - line.slope * x1;
     // Add to collection if space available
-    Line_Obstacle::obstacleCollection.add_front(this);
+    Line_Obstacle::obstacleCollection().add_front(this);
 }
 
 // Check if the obstacle has expired
@@ -78,10 +81,13 @@ void Line_Obstacle::addPolygonObstacle(const std::vector<std::pair<float, float>
 }
 
 // Circle obstacle class
-Singly_Linked_List<Circle_Obstacle> Circle_Obstacle::obstacleCollection = Singly_Linked_List<Circle_Obstacle>();
+Singly_Linked_List<Circle_Obstacle>& Circle_Obstacle::obstacleCollection() {
+    static Singly_Linked_List<Circle_Obstacle> collection;
+    return collection;
+}
 Circle_Obstacle::Circle_Obstacle(float x_, float y_, float r_, float lifeTimeMs)
     : x(x_), y(y_), radius(r_), lifeTimer(lifeTimeMs < 0 ? MAX_OBSTACLE_DURATION : lifeTimeMs) {
-    Circle_Obstacle::obstacleCollection.add_front(this);
+    Circle_Obstacle::obstacleCollection().add_front(this);
 }
 
 // Check if the obstacle expired
@@ -144,9 +150,9 @@ bool RclSensor::isValid(float distVal) const {
     if (std::abs( std::fmod(this->sp.heading, 90.0) ) > angleTolerance &&
         std::abs( std::fmod(this->sp.heading, 90.0) ) < (90 - angleTolerance)) return false;   // Limit heading to intervals around 90 degrees to increase accuracy
     // Detect if the ray is intersecting with any circular obstacles
-    for (auto* item : Circle_Obstacle::obstacleCollection) { if (item->isIntersecting(sp)) return false; }
+    for (auto* item : Circle_Obstacle::obstacleCollection()) { if (item->isIntersecting(sp)) return false; }
     // Detect if the ray is intersectign with any line obstacles
-    for (auto* item : Line_Obstacle::obstacleCollection) { if (item->isIntersecting(sp)) return false; }
+    for (auto* item : Line_Obstacle::obstacleCollection()) { if (item->isIntersecting(sp)) return false; }
 
     return true;
 }
@@ -409,15 +415,15 @@ void RclTracking::syncUpdate() {
 }
 void RclTracking::lifeTimeUpdate() {
     // Clean circular obstacles
-    auto circle_itr = Circle_Obstacle::obstacleCollection.begin();
-    while (circle_itr != Circle_Obstacle::obstacleCollection.end()) {
+    auto circle_itr = Circle_Obstacle::obstacleCollection().begin();
+    while (circle_itr != Circle_Obstacle::obstacleCollection().end()) {
         if ((**circle_itr).expired()) circle_itr.remove(true);
         else ++circle_itr;
     }
 
     // Clean line obstacles
-    auto line_itr = Line_Obstacle::obstacleCollection.begin();
-    while (line_itr != Line_Obstacle::obstacleCollection.end()) {
+    auto line_itr = Line_Obstacle::obstacleCollection().begin();
+    while (line_itr != Line_Obstacle::obstacleCollection().end()) {
         if ((**line_itr).expired()) line_itr.remove(true);
         else ++line_itr;
     }
