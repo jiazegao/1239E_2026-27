@@ -22,11 +22,13 @@ void initialize() {
 	init_auton_selector();
 	initControllerDisplay();
 	initLog();	// Critical; DO NOT REMOVE
-	initEffectorPID();
 	initLiftPID();
 	//initBrainDisplay();
 
-	effectorRotateMotor.set_encoder_units(pros::MotorEncoderUnits::degrees);
+	// Override gearset for 5.5 motors
+	leftMotors.set_gearing(pros::MotorGears::green, 2);
+	rightMotors.set_gearing(pros::MotorGears::green, 2);
+
 	liftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	liftMotors.set_encoder_units(pros::MotorEncoderUnits::degrees);
 	liftMotors.set_zero_position(0.0);
@@ -40,7 +42,6 @@ void autonomous() {
 	enableLiftPID = true;
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	
-	hardResetEffector();
 	// left30();
 	runAuton();
 	

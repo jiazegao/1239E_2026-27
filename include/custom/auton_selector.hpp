@@ -16,15 +16,6 @@ struct AutonEntry {
 // Auton Collection
 inline int autonCount = 0;
 constexpr std::array<AutonEntry, 9> AutonCollection = {{
-    {"Left 40", left40},
-    {"Right 40", right40},
-    {"Left 30", left30},
-    {"Right 30", right30},
-    {"Left 30_10", left3_1},
-    {"Right 30_10", right3_1},
-    {"Right 20_10", right2_1},
-    {"alliance1pin", alliance1pin},
-    {"skills", skills}
 }};
 
 // GUI objects

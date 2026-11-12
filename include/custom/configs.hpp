@@ -71,12 +71,12 @@ inline pros::Controller controller(pros::E_CONTROLLER_MASTER);
 inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 
 // Motors
-inline pros::MotorGroup leftMotors({10, 9}, pros::MotorGearset::blue);
-inline pros::MotorGroup rightMotors({-19, -17}, pros::MotorGearset::blue);
-inline pros::MotorGroup liftMotors({-7, 21}, pros::MotorGearset::blue);
-inline pros::Motor frontIntakeMotor(20, pros::MotorGearset::blue);
-inline pros::Motor effectorIntakeMotor(-5, pros::MotorGearset::green);
-inline pros::Motor effectorRotateMotor(-4, pros::MotorGearset::green);
+inline pros::MotorGroup leftMotors({tempPort, tempPort, tempPort}, pros::MotorGearset::blue);
+inline pros::MotorGroup rightMotors({tempPort, tempPort, tempPort}, pros::MotorGearset::blue);
+inline pros::MotorGroup liftMotors({tempPort, tempPort}, pros::MotorGearset::blue);
+inline pros::Motor frontIntakeMotor(tempPort, pros::MotorGearset::blue);
+inline pros::Motor clawGrippersMotor(tempPort, pros::MotorGearset::green);
+inline pros::Motor clawIntakeMotor(tempPort, pros::MotorGearset::green);
 inline lemlib::PID effectorPID(1.2, 0.0, 0.5);
 inline lemlib::PID liftPID(1.2, 0.0, 0.5);
 
@@ -89,13 +89,13 @@ inline lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // IMU
-inline ScaledIMU imu(16, 360.0, 360.91); // Adjust actual_reading based on your IMU's behavior
-
-// Optical
-inline pros::Optical frontOptic(3);
+inline ScaledIMU imu(tempPort, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
 
 // Odometry
-inline lemlib::OdomSensors sensors( nullptr,
+inline pros::Rotation vertRotation(tempPort);
+inline lemlib::TrackingWheel vertPod(&vertRotation, 3.25, 0);
+
+inline lemlib::OdomSensors sensors( &vertPod,
                                     nullptr,
                                     nullptr,
                                     nullptr,
@@ -166,7 +166,7 @@ inline RclSensor left_rcl(&left_dist, -5.857102, -2.999773, 270.0, 15.0);
 inline RclSensor back_rcl(&back_dist, -5.6937585, -0.920094, 180.0, 15.0);
 inline RclSensor right_rcl(&right_dist, 5.857102, -2.999773, 90.0, 15.0);
 inline RclTracking RclMain(&chassis, 1, false, 0.5, 4.0, 200.0, 6.0, 50);
-inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {nullptr, 0.0, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
+inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {&vertRotation, 0.0, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
 
 enum MCL_Log_Format {DISABLED, SDCARD, SCREEN};
 inline MCL_Log_Format mclLogType = SDCARD;

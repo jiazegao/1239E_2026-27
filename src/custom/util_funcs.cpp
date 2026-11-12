@@ -107,15 +107,6 @@ void startBrainFBDisplay() {
 };
 
 // Test Functions
-void startControllerOpticDisplay() {
-    controllerDisplayFunc = [](){
-        controller.clear();
-        pros::delay(50);
-        controller.print(0, 0, "Hue: %f", frontOptic.get_hue());
-        pros::delay(50);
-        controller.print(1, 0, "Prox: %d", frontOptic.get_proximity());
-    };
-};
 void startControllerRCLInfoDisplay() {
     controllerDisplayFunc = [](){
         controller.clear();
