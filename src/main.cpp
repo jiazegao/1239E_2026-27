@@ -29,7 +29,7 @@ void initialize() {
 	leftMotors.set_gearing(pros::MotorGears::green, 2);
 	rightMotors.set_gearing(pros::MotorGears::green, 2);
 
-	liftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	liftMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
 	liftMotors.set_encoder_units(pros::MotorEncoderUnits::degrees);
 	liftMotors.set_zero_position(0.0);
 }
@@ -41,10 +41,9 @@ void competition_initialize() {}
 void autonomous() {
 	enableLiftPID = true;
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+	hardResetClaw();
 	
-	// left30();
 	runAuton();
-	
 }
 
 void opcontrol() {
@@ -52,6 +51,8 @@ void opcontrol() {
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	enableLiftPID = false;
 	startBrainFBDisplay();
+
+	if (!clawHomed) hardResetClaw();
 
 	while (true) {
 

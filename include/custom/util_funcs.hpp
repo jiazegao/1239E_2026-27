@@ -31,7 +31,6 @@ void startBrainCoordDisplay();
 void startBrainFBDisplay();
 
 // Test Functions
-void startControllerOpticDisplay();
 void startControllerRCLInfoDisplay();
 
 // MCL Functions

@@ -17,27 +17,30 @@ void reverseFrontIntake(int velocity) {
     frontIntakeMotor.move(-velocity);
 }
 void stopFrontIntake() {
-    frontIntakeMotor.move(0);
+    frontIntakeMotor.brake();
 }
 
-void startClawIntake(int velocity) {
-    clawIntakeMotor.move(velocity);
+void startClawIntake(int velocity_rpm) {
+    clawIntakeMotor.move_velocity(velocity_rpm);
 }
-void reverseClawIntake(int velocity) {
-    clawIntakeMotor.move(-velocity);
+void reverseClawIntake(int velocity_rpm) {
+    clawIntakeMotor.move_velocity(-velocity_rpm);
 }
 void stopClawIntake() {
-    clawIntakeMotor.move(0);
+    clawIntakeMotor.brake();
 }
 
 void openClaw(int velocity) {
-    clawGrippersMotor.move(velocity);
+    if (!clawHomed) return;
+    clawGrippersMotor.move_absolute(claw_open_position, velocity);
 }
 void closeClaw(int velocity) {
-    clawGrippersMotor.move(-velocity);
+    if (!clawHomed) return;
+    clawGrippersMotor.move_absolute(claw_close_position, velocity);
 }
-void stopClaw(int velocity) {
-    clawGrippersMotor.move(0);
+void stopClaw() {
+    if (!clawHomed) return;
+    clawGrippersMotor.brake();
 }
 
 void raiseLift(int velocity) {
@@ -47,7 +50,7 @@ void lowerLift(int velocity) {
     liftMotors.move(-velocity);
 }
 void stopLift() {
-    liftMotors.move(0);
+    liftMotors.brake();
 }
 
 pros::Task* liftMacroTask = nullptr;
@@ -55,11 +58,19 @@ float liftTargetHeight = 0.0;
 constexpr float LIFT_GEAR_RATIO = 0.0;  // Deg / Inch height
 void initLiftPID() {
     liftMacroTask = new pros::Task ([](){
+        bool wasEnabled = false;
         while (true) {
             if (enableLiftPID) {
-                float output = liftPID.update(std::fmax(-60.0, liftTargetHeight*LIFT_GEAR_RATIO - liftMotors.get_position_all()[0]));
-                liftMotors.move(output);
+                float error = std::fmax(-60.0, liftTargetHeight*LIFT_GEAR_RATIO - liftMotors.get_position_all()[0]);
+                if (!wasEnabled) {            // just took over: clear integral, no derivative kick
+                    liftPID.reset();
+                    liftPID.prevError = error;
+                }
+                float output = liftPID.update(error);
+                if (std::fabs(output) > 1.0f) liftMotors.move(output);
+                else liftMotors.brake();
             }
+            wasEnabled = enableLiftPID;
             pros::delay(20);
         }
     });
@@ -77,22 +88,67 @@ void resetLift() {
     liftTargetHeight = 0.0;
 }
 
-pros::Task L1Macro([](){});
-bool effectorIntakeOccupied = false;
+pros::Task clawResetTask([](){});
+void hardResetClaw() {
+    clawHomed = false;
+    clawResetTask = pros::Task([](){
+        clawGrippersMotor.move(-127);
+        pros::delay(1000);
+        clawGrippersMotor.brake();
+        clawGrippersMotor.set_zero_position(0.0);
+        clawHomed = true;
+    });
+}
+
+float passive_height = 0.0;
+bool liftOnPID = false;
+
 void updateLiftMotors() {
 
-}
+    // L1 open grippers to open position, outtake claw roller at 50 rpm
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        openClaw();
+        reverseClawIntake(50);
+    }
+    // DOWN lift at set "passive" toggle height
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+        liftOnPID = true;
+        setLift(passive_height);
+    }
+    /*RIGHT spin claw roller intake, rotate grippers to grab position, 
+    keep claw rollers intaking at 50 rpm until L1, or B are pressed
+    */
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        startClawIntake(50);
+        closeClaw();
+    }
 
-// Lift end effector and lift before calling this
-void scoreCup(float dropHeight, float raiseHeight) {
-    pros::Task([dropHeight, raiseHeight](){
-        
-    });
-}
+    /*L2 reset lift spin intake, spin claw roller intake, 
+    rotate grippers to grab position, keep claw rollers 
+    intaking at 50 rpm until L1, or B are pressed*/
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        liftOnPID = true;
+        resetLift();
+        startFrontIntake();
+        startClawIntake(50);
+        closeClaw();
+    }
+    // B outtake claw roller, reverse/outtake ground intake
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+        reverseClawIntake(50);
+        openClaw();
+        reverseFrontIntake();
+    }
+    else {
+        stopFrontIntake();
+    }
 
-// Set effector to right angle before calling this
-void scorePin() {
-    pros::Task([](){
-        
-    });
+    bool r1 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
+    bool r2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+
+    if (r1 || r2) liftOnPID = false;
+    enableLiftPID = liftOnPID;
+    if (r2) lowerLift();
+    else if (r1) raiseLift();
+    else if (!liftOnPID) stopLift();
 }
