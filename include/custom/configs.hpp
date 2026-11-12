@@ -82,8 +82,8 @@ inline lemlib::PID liftPID(1.2, 0.0, 0.5);
 
 inline lemlib::Drivetrain drivetrain(&leftMotors,
                               &rightMotors,
-                              10.400,
-                              3.25,
+                              11.413500,
+                              2.75,
                               450,
                               2
 );
