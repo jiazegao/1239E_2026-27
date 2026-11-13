@@ -71,12 +71,12 @@ inline pros::Controller controller(pros::E_CONTROLLER_MASTER);
 inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 
 // Motors
-inline pros::MotorGroup leftMotors({tempPort, tempPort, tempPort}, pros::MotorGearset::blue);
-inline pros::MotorGroup rightMotors({tempPort, tempPort, tempPort}, pros::MotorGearset::blue);
-inline pros::MotorGroup liftMotors({tempPort, tempPort}, pros::MotorGearset::blue);
-inline pros::Motor frontIntakeMotor(tempPort, pros::MotorGearset::blue);
-inline pros::Motor clawGrippersMotor(tempPort, pros::MotorGearset::green);
-inline pros::Motor clawIntakeMotor(tempPort, pros::MotorGearset::green);
+inline pros::MotorGroup leftMotors({15, 14, 13}, pros::MotorGearset::blue);
+inline pros::MotorGroup rightMotors({8, 7, 10}, pros::MotorGearset::blue);
+inline pros::MotorGroup liftMotors({20, 19}, pros::MotorGearset::blue);
+inline pros::Motor frontIntakeMotor(17, pros::MotorGearset::blue);
+inline pros::Motor clawGrippersMotor(16, pros::MotorGearset::green);
+inline pros::Motor clawIntakeMotor(18, pros::MotorGearset::green);
 inline lemlib::PID liftPID(1.2, 0.0, 0.5);
 
 inline lemlib::Drivetrain drivetrain(&leftMotors,
@@ -88,10 +88,10 @@ inline lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // IMU
-inline ScaledIMU imu(tempPort, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
+inline ScaledIMU imu(11, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
 
 // Odometry
-inline pros::Rotation vertRotation(tempPort);
+inline pros::Rotation vertRotation(9);
 inline lemlib::TrackingWheel vertPod(&vertRotation, 3.25, 0);
 
 inline lemlib::OdomSensors sensors( &vertPod,
