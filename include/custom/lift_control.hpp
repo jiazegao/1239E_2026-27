@@ -24,8 +24,8 @@ enum LIFT_STAGES {IDLE_HEIGHT, FIRST_STACK, SECOND_STACK, THIRD_STACK, FOUTH_STA
 constexpr float LIFT_HEIGHTS[6] = {0.0, 10.0, 20.0, 30.0, 40.0, 50.0};    // Needs manual configuration
 
 inline bool enableLiftPID = false;
-inline float claw_open_position = 100.0;
-inline float claw_close_position = 0.0;
+inline float claw_open_position = 90.0;
+inline float claw_close_position = 10.0;
 inline bool clawHomed = false;
 
 /*

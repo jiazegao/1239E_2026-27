@@ -71,12 +71,12 @@ inline pros::Controller controller(pros::E_CONTROLLER_MASTER);
 inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 
 // Motors
-inline pros::MotorGroup leftMotors({15, 14, 13}, pros::MotorGearset::blue);
+inline pros::MotorGroup leftMotors({-15, -14, -13}, pros::MotorGearset::blue);
 inline pros::MotorGroup rightMotors({8, 7, 10}, pros::MotorGearset::blue);
-inline pros::MotorGroup liftMotors({20, 19}, pros::MotorGearset::blue);
+inline pros::MotorGroup liftMotors({20, -19}, pros::MotorGearset::blue);
 inline pros::Motor frontIntakeMotor(17, pros::MotorGearset::blue);
-inline pros::Motor clawGrippersMotor(16, pros::MotorGearset::green);
-inline pros::Motor clawIntakeMotor(18, pros::MotorGearset::green);
+inline pros::Motor clawGrippersMotor(18, pros::MotorGearset::green);
+inline pros::Motor clawIntakeMotor(-16, pros::MotorGearset::green);
 inline lemlib::PID liftPID(1.2, 0.0, 0.5);
 
 inline lemlib::Drivetrain drivetrain(&leftMotors,
