@@ -44,7 +44,9 @@ void stopClaw() {
 }
 
 void raiseLift(int velocity) {
-    liftMotors.move(velocity);
+    // hardstop: at/above max height, hold instead of driving up
+    if (liftMotors.get_position_all()[0] >= LIFT_MAX_MOTOR_DEG) liftMotors.brake();
+    else liftMotors.move(velocity);
 }
 void lowerLift(int velocity) {
     liftMotors.move(-velocity);
@@ -70,6 +72,8 @@ void initLiftPID() {
                     liftPID.prevError = error;
                 }
                 float output = liftPID.update(error);
+                // hardstop: never push up past max height
+                if (output > 0 && liftMotors.get_position_all()[0] >= LIFT_MAX_MOTOR_DEG) output = 0;
                 if (std::fabs(output) > 1.0f) liftMotors.move(output);
                 else liftMotors.brake();
             }
@@ -79,12 +83,16 @@ void initLiftPID() {
     });
 }
 
+static float clampLiftTarget(float t) {
+    return std::fmin(t, LIFT_MAX_MOTOR_DEG / LIFT_GEAR_RATIO);  // hardstop
+}
+
 void setLift(LIFT_STAGES newTargetEnum) {
-    liftTargetHeight = LIFT_HEIGHTS[newTargetEnum];
+    liftTargetHeight = clampLiftTarget(LIFT_HEIGHTS[newTargetEnum]);
 }
 
 void setLift(float newTargetInch) {
-    liftTargetHeight = newTargetInch;
+    liftTargetHeight = clampLiftTarget(newTargetInch);
 }
 
 pros::Task liftResetTask([](){});

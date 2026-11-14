@@ -125,9 +125,9 @@ private:
         // x (fwd/back), y (left/right), theta (angle sensor is pointing)
         {4.656207f, 5.6937585f, 0.0f},      // FRONT LEFT; 9.12" high
         {4.656207f, -5.6937585f, 0.0f},     // FRONT RIGHT; 9.12" high
-        {-2.999773f, 5.857102f, std::numbers::pi/2}, // LEFT BACK; 4.19" high
+        {-6.5f, 5.857102f, std::numbers::pi/2},      // LEFT; 6.5" behind center, 6" high (side dist unconfirmed)
         {-0.920094f, 5.6937585f, std::numbers::pi},   // BACK LEFT; 9.12" high
-        {-2.999773f, -5.857102f, std::numbers::pi*3/2}   // RIGHT BACK; 4.19" high
+        {-6.5f, -5.857102f, std::numbers::pi*3/2}    // RIGHT; 6.5" behind center, 4.5" high (side dist unconfirmed)
     };
     static constexpr bool high_sensor[SENSOR_COUNT] = {true, true, false, true, false};
     std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr};

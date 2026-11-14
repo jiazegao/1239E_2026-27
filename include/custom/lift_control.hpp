@@ -26,6 +26,8 @@ void stopLift();
 enum LIFT_STAGES {IDLE_HEIGHT, FIRST_STACK, SECOND_STACK, THIRD_STACK, FOUTH_STACK, FIFTH_STACK};
 // Lift-arm degrees above bottom. Written as (motor deg / 7) so you can tune using the P: value on the controller.
 constexpr float LIFT_HEIGHTS[6] = {0.0, 1000.0/7, 2000.0/7, 3000.0/7, 4000.0/7, 5000.0/7};  // max = 5000 motor deg
+// Software hardstop: lift will never be driven above this (motor degrees, same units as the P: value).
+constexpr float LIFT_MAX_MOTOR_DEG = 4900.0;
 
 inline bool enableLiftPID = false;
 inline bool clawHomed = false;

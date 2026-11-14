@@ -25,11 +25,12 @@ void toggle() {
 
 void left3pin(){
      chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    chassis.setPose(60, 0, 90);
+    //  clawGrippersMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    chassis.setPose(57, 0, 90);
     closeClaw();
     pros::delay(200);
-   // MclMain.setObstacles(&leftAutonObstacles, nullptr);
-    // startMcl(60, 0, 90, true, false, false, false);
+//    MclMain.setObstacles(&leftAutonObstacles, nullptr);
+    // startMcl(57, 0, 90, false, false, false, false);
     // startFrontIntake();
     
     enableLiftPID = true;     // lift PID holds the target height
@@ -38,12 +39,12 @@ void left3pin(){
     startClawIntake(80);  // start intaking the pin
     pros::delay(1500);
 //Move to alliance goal and pin drop
-    chassis.moveToPoint(44, 0, 2000, { .forwards = false, .maxSpeed = 100,}, true);
+    chassis.moveToPoint(40, 0, 2000, { .forwards = false, .maxSpeed = 100,}, true);
     setLift(FIRST_STACK); 
-    chassis.turnToPoint(44, 24, 600, {.forwards = false}, true);
-    chassis.moveToPoint(46, 24, 400, {.forwards = false, .maxSpeed = 80}, true);
+    chassis.turnToPoint(40, 22, 600, {.forwards = false}, true);
+    chassis.moveToPoint(40, 22, 400, {.forwards = false, .maxSpeed = 80}, true);
 
-    chassis.moveToPoint(44, 24, 2000, {.forwards = false, .maxSpeed = 50}, true);
+    chassis.moveToPoint(40, 22, 2000, {.forwards = false, .maxSpeed = 50}, true);
     //Drop pin and back up
    pros::delay(800);
     setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);  // drop pin
@@ -54,12 +55,15 @@ void left3pin(){
     //back up
     chassis.moveToPoint(44, 10, 1500, { .maxSpeed = 100}, true);
    //get cup and score
-    chassis.turnToPoint(23, 24, 600, {.forwards = false}, true);
-    chassis.moveToPoint(23, 24, 400, {.forwards = false, .minSpeed = 70 }, true);
-    chassis.moveToPoint(23, 24, 2000, { .forwards = false, .maxSpeed = 45,});
+    chassis.turnToPoint(18, 22, 600, {.forwards = false}, true);
+    // hardResetClaw();
+    pros::delay(500);
+    chassis.moveToPoint(18, 22, 400, {.forwards = false, .minSpeed = 70 }, true);
+    openClaw(150, 127);
+    chassis.moveToPoint(18, 22, 2000, { .forwards = false, .maxSpeed = 35,});
     startClawIntake(127);
-    closeClaw(10, 127);
-    pros::delay(300);
+    closeClaw(-80, 127);
+    pros::delay(400);
     //score
     setLift(SECOND_STACK);
     pros::delay(300);
@@ -69,5 +73,5 @@ void left3pin(){
     chassis.moveToPoint(44, 34, 2000, { .forwards = false, .maxSpeed = 45,});
     pros::delay(200);
     setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
-    openClaw(-150, 127);
+    // openClaw(150, 127);
 }

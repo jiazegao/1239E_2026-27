@@ -163,9 +163,9 @@ inline std::array<pros::Distance*, 5> DISTANCE_COLLECTION = {&frontL_dist, &fron
 // Rcl setup
 inline RclSensor frontL_rcl(&frontL_dist, -5.6937585, 4.656207, 0, 15.0);
 inline RclSensor frontR_rcl(&frontR_dist, 5.6937585, 4.656207, 0, 15.0);
-inline RclSensor left_rcl(&left_dist, -5.857102, -2.999773, 270.0, 15.0);
+inline RclSensor left_rcl(&left_dist, -5.857102, -6.5, 270.0, 15.0);   // 6.5 in behind center; side dist unconfirmed
 inline RclSensor back_rcl(&back_dist, -5.6937585, -0.920094, 180.0, 15.0);
-inline RclSensor right_rcl(&right_dist, 5.857102, -2.999773, 90.0, 15.0);
+inline RclSensor right_rcl(&right_dist, 5.857102, -6.5, 90.0, 15.0);   // 6.5 in behind center; side dist unconfirmed
 inline RclTracking RclMain(&chassis, 1, false, 0.5, 4.0, 200.0, 6.0, 50);
 inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {&vertRotation, 3.25, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
 
