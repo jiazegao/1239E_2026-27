@@ -130,6 +130,7 @@ static pros::Task* mclTask = nullptr;
 static pros::Task* displayTask = nullptr;
 
 void startMclBenchmark(float x, float y, float theta, float autoReset) {
+    if (!distanceSensorsEnabled) return;  // no distance sensors mounted
 
     if (mclTask != nullptr) return;
 
@@ -182,7 +183,9 @@ void startMcl(float x, float y, float vexTheta, bool resetFront, bool resetLeft,
     lemlib::Pose p(x, y, vexTheta);
     chassis.setPose(x, y, vexTheta);
 	RclMain.setRclPose(p);
-    
+
+    if (!distanceSensorsEnabled) return;  // no distance sensors: odom only
+
     // Perform RCL Resets
     if (resetFront) RclMain.updateBotPose(&frontL_rcl);
     if (resetLeft) RclMain.updateBotPose(&left_rcl);

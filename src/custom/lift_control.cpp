@@ -30,13 +30,13 @@ void stopClawIntake() {
     clawIntakeMotor.brake();
 }
 
-void openClaw(int velocity) {
+void openClaw(float angle, int velocity) {
     if (!clawHomed) return;
-    clawGrippersMotor.move_absolute(claw_open_position, velocity);
+    clawGrippersMotor.move_absolute(angle, velocity);
 }
-void closeClaw(int velocity) {
+void closeClaw(float angle, int velocity) {
     if (!clawHomed) return;
-    clawGrippersMotor.move_absolute(claw_close_position, velocity);
+    clawGrippersMotor.move_absolute(angle, velocity);
 }
 void stopClaw() {
     if (!clawHomed) return;
@@ -56,7 +56,8 @@ void stopLift() {
 pros::Task* liftMacroTask = nullptr;
 float liftTargetHeight = 0.0;
 std::atomic<bool> liftResetting{false};  // true while lift drives to bottom
-constexpr float LIFT_GEAR_RATIO = 0.0;  // Deg / Inch height
+std::atomic<bool> liftResetAbort{false}; // set by driver (R1/R2) to cancel a reset
+constexpr float LIFT_GEAR_RATIO = 84.0 / 12.0;  // 12:84 gearing -> 7 motor deg per lift-arm deg
 void initLiftPID() {
     liftMacroTask = new pros::Task ([](){
         bool wasEnabled = false;
@@ -90,22 +91,27 @@ pros::Task liftResetTask([](){});
 void resetLift() {
     liftTargetHeight = 0.0;
     if (liftResetting) return;  // already going down, don't start again
+    liftResetAbort = false;
     liftResetting = true;
     liftResetTask = pros::Task([](){
-        liftMotors.move(-80);
-        pros::delay(200);  // let it start moving
+        liftMotors.move(-127);  // full speed down
         uint32_t start = pros::millis();
-        // drive down until lift stalls on bottom, or 1.5 s pass
-        while (pros::millis() - start < 1500 &&
-               std::fabs(liftMotors.get_actual_velocity()) > 5) {
+        // drive down until lift stalls on bottom, 1.5 s pass, or driver cancels.
+        // First 200 ms skip the stall check so the lift can start moving.
+        while (!liftResetAbort && pros::millis() - start < 1500 &&
+               (pros::millis() - start < 200 ||
+                std::fabs(liftMotors.get_actual_velocity()) > 5)) {
             pros::delay(20);
         }
-        liftMotors.brake();
-        liftMotors.tare_position_all();  // bottom = 0
+        if (!liftResetAbort) {
+            liftMotors.brake();
+            liftMotors.tare_position_all();  // bottom = 0 (only if we actually reached it)
+        }
         liftResetting = false;
     });
 }
 
+bool isLiftResetting() { return liftResetting; }
 pros::Task clawResetTask([](){});
 void hardResetClaw() {
     clawHomed = false;
@@ -123,26 +129,38 @@ bool liftOnPID = false;
 
 void updateLiftMotors() {
 
+    // EMERGENCY: UP + X together -> hard reset claw and lift to the bottom.
+    // Fires once per press (holding it won't restart the reset over and over).
+    static bool prevShift = false;
+    bool shift = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP) &&
+                 controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
+    if (shift && !prevShift) {
+        stopClawIntake();
+        stopFrontIntake();
+        hardResetClaw();
+        liftOnPID = true;   // hold lift at bottom (0) after reset finishes
+        resetLift();
+    }
+    prevShift = shift;
+    if (shift) return;  // ignore other buttons while the combo is held
+
     // DOWN lift at set "passive" toggle height
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
         liftOnPID = true;
         setLift(passive_height);
     }
-    /*RIGHT spin claw roller intake, rotate grippers to grab position,
-    keep claw rollers intaking at 50 rpm until L1, or B are pressed
-    */
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-    closeClaw();
-        startFrontIntake(127);
-        startClawIntake(127);
-    }
-
     //L2 reset lift spin intake, spin claw roller intake,
     // rotate grippers to grab position, keep claw rollers intaking at 50 rpm until L1,
     // or B are pressed
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    static bool prevL2Reset = false;
+    bool l2Held = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
+    if (l2Held && !prevL2Reset) {   // only reset once per press, not every tick
         liftOnPID = true;
         resetLift();
+    }
+    prevL2Reset = l2Held;
+
+    if (l2Held) {
         closeClaw();
         startFrontIntake(127);
         startClawIntake(127);
@@ -154,12 +172,24 @@ void updateLiftMotors() {
     }
     // B outtake claw roller, reverse/outtake ground intake
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-        reverseClawIntake();
+        stopClawIntake();
         openClaw();
         reverseFrontIntake();
     }
+    /*RIGHT open claw, spin front intake, claw rollers intake at 50 rpm
+    (rollers keep intaking after release until L1 or B are pressed)*/
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        openClaw();
+        startFrontIntake();
+        startClawIntake(50);
+    }
     else {
         stopFrontIntake();
+    }
+
+    // Y open claw
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+        openClaw();
     }
 
     // L2 let go -> claw rollers back to 50 rpm intake
@@ -169,14 +199,18 @@ void updateLiftMotors() {
     if (prevL2 && !l2 && !b) startClawIntake(50);
     prevL2 = l2;
 
-    if (liftResetting) return;  // reset task owns the lift right now
-
     bool r1 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
     bool r2 = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
+    // Driver can interrupt a reset instantly with R1/R2
+    if (liftResetting) {
+        if (r1 || r2) liftResetAbort = true;
+        else return;  // reset task owns the lift right now
+    }
+
     if (r1 || r2) liftOnPID = false;
     enableLiftPID = liftOnPID;
-    if (r2) lowerLift();
+    if (r2) lowerLift(127);  // full speed down in teleop
     else if (r1) raiseLift();
     else if (!liftOnPID) stopLift();
 }

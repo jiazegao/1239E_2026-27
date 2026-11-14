@@ -41,9 +41,9 @@ void competition_initialize() {}
 void autonomous() {
 	enableLiftPID = true;
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-	hardResetClaw();
-	
-	runAuton();
+	// hardResetClaw();
+	left3pin();
+	// runAuton();
 }
 
 void opcontrol() {
@@ -53,6 +53,7 @@ void opcontrol() {
 	startBrainFBDisplay();
 
 	if (!clawHomed) hardResetClaw();
+	resetLift();
 
 	while (true) {
 

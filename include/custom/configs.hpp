@@ -73,7 +73,7 @@ inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 // Motors
 inline pros::MotorGroup leftMotors({-15, -14, -13}, pros::MotorGearset::blue);
 inline pros::MotorGroup rightMotors({8, 7, 10}, pros::MotorGearset::blue);
-inline pros::MotorGroup liftMotors({20, -19}, pros::MotorGearset::blue);
+inline pros::MotorGroup liftMotors({-19, 20}, pros::MotorGearset::blue);  // 19 first: always plugged in, used for position/velocity. 20 = skills only
 inline pros::Motor frontIntakeMotor(17, pros::MotorGearset::blue);
 inline pros::Motor clawGrippersMotor(18, pros::MotorGearset::green);
 inline pros::Motor clawIntakeMotor(-16, pros::MotorGearset::green);
@@ -91,7 +91,7 @@ inline lemlib::Drivetrain drivetrain(&leftMotors,
 inline ScaledIMU imu(11, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
 
 // Odometry
-inline pros::Rotation vertRotation(9);
+inline pros::Rotation vertRotation(-9);
 inline lemlib::TrackingWheel vertPod(&vertRotation, 3.25, 0);
 
 inline lemlib::OdomSensors sensors( &vertPod,
@@ -150,11 +150,13 @@ inline lemlib::Chassis chassis( drivetrain, // drivetrain settings
 
 // Distance
 enum DISTSENSORS {FRONT_L, FRONT_R, LEFT, BACK, RIGHT};
-inline pros::Distance frontL_dist(1);
-inline pros::Distance frontR_dist(8);
-inline pros::Distance left_dist(18);
-inline pros::Distance back_dist(2);
-inline pros::Distance right_dist(3);
+// No distance sensors mounted right now -> all on tempPort. Real ports in comments.
+inline bool distanceSensorsEnabled = false;  // set true once distance sensors are mounted
+inline pros::Distance frontL_dist(tempPort);  // real: 1
+inline pros::Distance frontR_dist(tempPort);  // real: 8
+inline pros::Distance left_dist(tempPort);    // real: 18
+inline pros::Distance back_dist(tempPort);    // real: 2
+inline pros::Distance right_dist(tempPort);   // real: 3
 
 inline std::array<pros::Distance*, 5> DISTANCE_COLLECTION = {&frontL_dist, &frontR_dist, &left_dist, &back_dist, &right_dist};
 
