@@ -154,9 +154,9 @@ enum DISTSENSORS {FRONT_L, FRONT_R, LEFT, BACK, RIGHT};
 inline bool distanceSensorsEnabled = false;  // set true once distance sensors are mounted
 inline pros::Distance frontL_dist(tempPort);  // real: 1
 inline pros::Distance frontR_dist(tempPort);  // real: 8
-inline pros::Distance left_dist(tempPort);    // real: 18
+inline pros::Distance left_dist(6);    // real: 6
 inline pros::Distance back_dist(tempPort);    // real: 2
-inline pros::Distance right_dist(tempPort);   // real: 3
+inline pros::Distance right_dist(5);   // real: 5
 
 inline std::array<pros::Distance*, 5> DISTANCE_COLLECTION = {&frontL_dist, &frontR_dist, &left_dist, &back_dist, &right_dist};
 

@@ -41,7 +41,7 @@ void left3pin(){
     chassis.moveToPoint(44, 0, 2000, { .forwards = false, .maxSpeed = 100,}, true);
     setLift(FIRST_STACK); 
     chassis.turnToPoint(44, 24, 600, {.forwards = false}, true);
-    chassis.moveToPoint(46, 22, 400, {.forwards = false, .maxSpeed = 80}, true);
+    chassis.moveToPoint(46, 24, 400, {.forwards = false, .maxSpeed = 80}, true);
 
     chassis.moveToPoint(44, 24, 2000, {.forwards = false, .maxSpeed = 50}, true);
     //Drop pin and back up
