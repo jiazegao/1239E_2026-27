@@ -42,7 +42,7 @@ void autonomous() {
 	
 	hardResetEffector();
 	// left30();
-	runAuton();
+	skills();
 	
 }
 

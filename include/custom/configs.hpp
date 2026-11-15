@@ -84,7 +84,7 @@ inline lemlib::Drivetrain drivetrain(&leftMotors,
                               &rightMotors,
                               10.400,
                               3.25,
-                              450,
+                              360,
                               2
 );
 
