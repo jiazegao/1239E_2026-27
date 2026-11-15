@@ -38,9 +38,9 @@ private:
     static constexpr float CONFIDENCE_SCALING_BASE = 32.0f;
     static constexpr float RIGHT_ANG_MULTIPLIER = 0.5f;
     static constexpr float RIGHT_ANG_CONST = 2.0 / M_PI * RIGHT_ANG_MULTIPLIER;
-    static constexpr float SENSOR_COUNT_SCALING = 0.20f;
+    static constexpr float SENSOR_COUNT_SCALING = 0.50f;
     
-    static constexpr float TRACKING_WHEEL_VARIANCE = 0.05f;
+    static constexpr float TRACKING_WHEEL_VARIANCE = 0.02f;
     static constexpr float IMU_VARIANCE = 0.0f; //0.002f;
     static constexpr float FAULT_TOLERANCE = 0.005f;
     float DIST_SYNC_PROP = 0.05f;
@@ -120,17 +120,14 @@ private:
     };
 
     // Sensor mounts
-    static constexpr int SENSOR_COUNT = 5;
+    static constexpr int SENSOR_COUNT = 2;
     static constexpr Pose sensor_mounts[SENSOR_COUNT] = {
         // x (fwd/back), y (left/right), theta (angle sensor is pointing)
-        {4.656207f, 5.6937585f, 0.0f},      // FRONT LEFT; 9.12" high
-        {4.656207f, -5.6937585f, 0.0f},     // FRONT RIGHT; 9.12" high
         {-6.5f, 5.857102f, std::numbers::pi/2},      // LEFT; 6.5" behind center, 6" high (side dist unconfirmed)
-        {-0.920094f, 5.6937585f, std::numbers::pi},   // BACK LEFT; 9.12" high
         {-6.5f, -5.857102f, std::numbers::pi*3/2}    // RIGHT; 6.5" behind center, 4.5" high (side dist unconfirmed)
     };
-    static constexpr bool high_sensor[SENSOR_COUNT] = {true, true, false, true, false};
-    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr};
+    static constexpr bool high_sensor[SENSOR_COUNT] = {true, true};
+    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;
     std::array<Timer, SENSOR_COUNT> disableTimers;
 
@@ -179,7 +176,7 @@ private:
     std::array<int, SENSOR_COUNT> sensor_readings_mm;
     std::array<float, SENSOR_COUNT> sensor_readings_inch;
     std::array<int, SENSOR_COUNT> sensor_confs;
-    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false, false, false, false};
+    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false};
 
     static constexpr int NOISE_POOL_SIZE = 2048;
     static constexpr int NOISE_MASK = NOISE_POOL_SIZE - 1;

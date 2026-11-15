@@ -139,7 +139,7 @@ void startMclBenchmark(float x, float y, float theta, float autoReset) {
     if (autoReset) {
         RclMain.updateBotPose(&left_rcl);
         RclMain.updateBotPose(&right_rcl);
-        RclMain.updateBotPose(&back_rcl);
+        //RclMain.updateBotPose(&back_rcl);
     }
     lemlib::Pose odomLast = chassis.getPose();
     MclMain.set_pose(odomLast.x, odomLast.y, odomLast.theta);
@@ -171,8 +171,8 @@ void startMclBenchmark(float x, float y, float theta, float autoReset) {
             pros::lcd::print(1, "MclPos: X:%.1f Y:%.1f T:%.1f", rawMcl.x, rawMcl.y, mclTheta);
             pros::lcd::print(2, "OdomPos: X:%.1f Y:%.1f T:%.1f", odomLast.x, odomLast.y, odomLast.theta);
             pros::lcd::print(3, "RclPos: X:%.1f Y:%.1f T:%.1f", RclPose.x, RclPose.y, RclPose.theta);
-            pros::lcd::print(4, "B: %d mm L: %d mm R:%d mm", back_dist.get(), left_dist.get(), right_dist.get());
-            pros::lcd::print(5, "Confs: B:%d L:%d R:%d", back_dist.get_confidence(), left_dist.get_confidence(), right_dist.get_confidence());
+            //pros::lcd::print(4, "B: %d mm L: %d mm R:%d mm", back_dist.get(), left_dist.get(), right_dist.get());
+            //pros::lcd::print(5, "Confs: B:%d L:%d R:%d", back_dist.get_confidence(), left_dist.get_confidence(), right_dist.get_confidence());
             pros::delay(60);
         }
     });
@@ -187,9 +187,9 @@ void startMcl(float x, float y, float vexTheta, bool resetFront, bool resetLeft,
     if (!distanceSensorsEnabled) return;  // no distance sensors: odom only
 
     // Perform RCL Resets
-    if (resetFront) RclMain.updateBotPose(&frontL_rcl);
-    if (resetLeft) RclMain.updateBotPose(&left_rcl);
-    if (resetBack) RclMain.updateBotPose(&back_rcl);
+    //if (resetFront) RclMain.updateBotPose(&frontL_rcl);
+    //if (resetLeft) RclMain.updateBotPose(&left_rcl);
+    //if (resetBack) RclMain.updateBotPose(&back_rcl);
     if (resetRight) RclMain.updateBotPose(&right_rcl);
 
     // Reset MCL

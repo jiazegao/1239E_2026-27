@@ -149,28 +149,22 @@ inline lemlib::Chassis chassis( drivetrain, // drivetrain settings
 );
 
 // Distance
-enum DISTSENSORS {FRONT_L, FRONT_R, LEFT, BACK, RIGHT};
+enum DISTSENSORS {LEFT, RIGHT};
 // No distance sensors mounted right now -> all on tempPort. Real ports in comments.
-inline bool distanceSensorsEnabled = false;  // set true once distance sensors are mounted
-inline pros::Distance frontL_dist(tempPort);  // real: 1
-inline pros::Distance frontR_dist(tempPort);  // real: 8
+inline bool distanceSensorsEnabled = true;  // set true once distance sensors are mounted
 inline pros::Distance left_dist(6);    // real: 6
-inline pros::Distance back_dist(tempPort);    // real: 2
 inline pros::Distance right_dist(5);   // real: 5
 
-inline std::array<pros::Distance*, 5> DISTANCE_COLLECTION = {&frontL_dist, &frontR_dist, &left_dist, &back_dist, &right_dist};
+inline std::array<pros::Distance*, 2> DISTANCE_COLLECTION = {&left_dist, &right_dist};
 
 // Rcl setup
-inline RclSensor frontL_rcl(&frontL_dist, -5.6937585, 4.656207, 0, 15.0);
-inline RclSensor frontR_rcl(&frontR_dist, 5.6937585, 4.656207, 0, 15.0);
 inline RclSensor left_rcl(&left_dist, -5.857102, -6.5, 270.0, 15.0);   // 6.5 in behind center; side dist unconfirmed
-inline RclSensor back_rcl(&back_dist, -5.6937585, -0.920094, 180.0, 15.0);
 inline RclSensor right_rcl(&right_dist, 5.857102, -6.5, 90.0, 15.0);   // 6.5 in behind center; side dist unconfirmed
 inline RclTracking RclMain(&chassis, 1, false, 0.5, 4.0, 200.0, 6.0, 50);
 inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {&vertRotation, 3.25, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
 
 enum MCL_Log_Format {DISABLED, SDCARD, SCREEN};
-inline MCL_Log_Format mclLogType = SDCARD;
+inline MCL_Log_Format mclLogType = SCREEN;
 inline std::ofstream* mclLog = nullptr;
 inline Timer mclLogTimer(100000000.0f);
 

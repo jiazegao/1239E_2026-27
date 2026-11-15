@@ -42,8 +42,8 @@ void autonomous() {
 	enableLiftPID = true;
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	// hardResetClaw();
-	left3pin();
-	// runAuton();
+	clawGrippersMotor.set_zero_position(13.0);
+	runAuton();
 }
 
 void opcontrol() {

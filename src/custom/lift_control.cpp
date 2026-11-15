@@ -125,7 +125,7 @@ void hardResetClaw() {
     clawHomed = false;
     clawResetTask = pros::Task([](){
         clawGrippersMotor.move(-127);
-        pros::delay(1000);
+        pros::delay(500);
         clawGrippersMotor.brake();
         clawGrippersMotor.set_zero_position(0.0);
         clawHomed = true;
