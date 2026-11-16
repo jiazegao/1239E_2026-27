@@ -197,7 +197,8 @@ void updateLiftMotors() {
 
     // Y open claw
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-        openClaw();
+        openClaw(200);
+        
     }
 
     // L2 let go -> claw rollers back to 50 rpm intake

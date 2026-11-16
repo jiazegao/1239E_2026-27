@@ -11,7 +11,7 @@ void startClawIntake(int velocity_rpm = 200);
 void reverseClawIntake(int velocity_rpm = 200);
 void stopClawIntake();
 
-inline float claw_open_position = 90.0;
+inline float claw_open_position = 140.0;
 inline float claw_close_position = 10.0;
 // angle = gripper motor degrees from fully closed (defaults to the positions above)
 void openClaw(float angle = claw_open_position, int velocity = 127);
