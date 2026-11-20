@@ -74,6 +74,8 @@ inline pros::Controller partner_controller(pros::E_CONTROLLER_PARTNER);
 inline pros::MotorGroup leftMotors({-15, -14, -13}, pros::MotorGearset::blue);
 inline pros::MotorGroup rightMotors({8, 7, 10}, pros::MotorGearset::blue);
 inline pros::MotorGroup liftMotors({-19, 20}, pros::MotorGearset::blue);  // 19 first: always plugged in, used for position/velocity. 20 = skills only
+inline pros::Motor liftMotor19(-19, pros::MotorGearset::blue);
+inline pros::Motor liftMotor20(20, pros::MotorGearset::blue);
 inline pros::Motor frontIntakeMotor(17, pros::MotorGearset::blue);
 inline pros::Motor clawGrippersMotor(18, pros::MotorGearset::green);
 inline pros::Motor clawIntakeMotor(-16, pros::MotorGearset::green);

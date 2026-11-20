@@ -55,6 +55,10 @@ void stopLift() {
     liftMotors.brake();
 }
 
+bool bothLiftMotorsInstalled() {
+    return liftMotor19.is_installed() && liftMotor20.is_installed();
+}
+
 pros::Task* liftMacroTask = nullptr;
 float liftTargetHeight = 0.0;
 std::atomic<bool> liftResetting{false};  // true while lift drives to bottom
@@ -219,7 +223,7 @@ void updateLiftMotors() {
 
     if (r1 || r2) liftOnPID = false;
     enableLiftPID = liftOnPID;
-    if (r2) lowerLift(127);  // full speed down in teleop
+    if (r2) lowerLift(bothLiftMotorsInstalled() ? 76 : 127);
     else if (r1) raiseLift();
     else if (!liftOnPID) stopLift();
 }
