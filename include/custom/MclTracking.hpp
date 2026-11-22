@@ -65,8 +65,8 @@ private:
         {{-70.2,  70.2}, {-70.2, -70.2}}
     };
 
-    // Universal elements
-    static constexpr Line_ universal_match_loaders[12] = {
+    // Field Elements
+    static constexpr Line_ match_loaders[12] = {
         // Top Right
         {{70.5, 56.75}, {66.5, 56.75}},
         {{66.5, 56.75}, {66.5, 60.75}},
@@ -85,10 +85,8 @@ private:
         {{66.5, -60.75}, {70.5, -60.75}}
     };
 
-    // HIGH field elements
+    // > 5 inch is high
     static constexpr Circle high_center_base = {0.0, 0.0, 1.5937075};
-
-    // LOW field elements
     static constexpr Line_ low_center_base[4] = {
         {{2.8056165, 2.8056165},{2.8056165, -2.8056165}},
         {{2.8056165, -2.8056165},{-2.8056165, -2.8056165}},
@@ -96,7 +94,8 @@ private:
         {{-2.8056165, 2.8056165},{2.8056165, 2.8056165}}
     };
 
-    static constexpr Line_ low_neutral_bases[16] = {
+    // <= 5.8 inch is visible
+    static constexpr Line_ neutral_bases[16] = {
         // LEFTMOST
         {{-44.5, 26.0},{-44.5, 21.0}},
         {{-44.5, 21.0},{-49.5, 21.0}},
@@ -112,22 +111,54 @@ private:
         {{44.5, -21.0},{49.5, -21.0}},
         {{49.5, -21.0},{49.5, -26.0}},
         {{49.5, -26.0},{44.5, -26.0}},
-        // BOTTOMMOST
+        // DOWNMOST
         {{21.0, -49.5},{21.0, -44.5}},
         {{21.0, -44.5},{26.0, -44.5}},
         {{26.0, -44.5},{26.0, -49.5}},
         {{26.0, -49.5},{21.0, -49.5}}
     };
 
+    // <= 3.25 inch is visible
+    static constexpr Line_ alliance_bases[16] = {
+        // LEFTMOST
+        {{-44.5, -26.0},{-44.5, -21.0}},
+        {{-44.5, -21.0},{-49.5, -21.0}},
+        {{-49.5, -21.0},{-49.5, -26.0}},
+        {{-49.5, -26.0},{-44.5, -26.0}},
+        // DOWNMOST
+        {{-21.0, -49.5},{-21.0, -44.5}},
+        {{-21.0, -44.5},{-26.0, -44.5}},
+        {{-26.0, -44.5},{-26.0, -49.5}},
+        {{-26.0, -49.5},{-21.0, -49.5}},
+        // RIGHTMOST
+        {{44.5, 26.0},{44.5, 21.0}},
+        {{44.5, 21.0},{49.5, 21.0}},
+        {{49.5, 21.0},{49.5, 26.0}},
+        {{49.5, 26.0},{44.5, 26.0}},
+        // UPMOST
+        {{21.0, 49.5},{21.0, 44.5}},
+        {{21.0, 44.5},{26.0, 44.5}},
+        {{26.0, 44.5},{26.0, 49.5}},
+        {{26.0, 49.5},{21.0, 49.5}}
+    }
+
     // Sensor mounts
-    static constexpr int SENSOR_COUNT = 2;
+    static constexpr int SENSOR_COUNT = 6;
     static constexpr Pose sensor_mounts[SENSOR_COUNT] = {
         // x (fwd/back), y (left/right), theta (angle sensor is pointing)
-        {-6.5f, 5.857102f, std::numbers::pi/2},      // LEFT; 6.5" behind center, 6" high (side dist unconfirmed)
-        {-6.5f, -5.857102f, std::numbers::pi*3/2}    // RIGHT; 6.5" behind center, 4.5" high (side dist unconfirmed)
+        // Front, Back, Left, Right, Back Left, Back Right
+        {2.754921f, 6.500079f, 0.0},
+        {-5.374094f, -4.756890f, std::numbers::pi},
+        {0.289449f, 6.759719f, std::numbers::pi/2},
+        {0.289449f, -6.759720f, std::numbers::pi*3/2},
+        {-5.833577f, 6.104867f, std::numbers::pi*3/4},
+        {-5.833577f, -6.104868f, std::numbers::pi*5/4}
     };
-    static constexpr bool high_sensor[SENSOR_COUNT] = {true, true};
-    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr};
+    static constexpr bool low_center_base_visible[SENSOR_COUNT] = {true, true, true, true, false, false};
+    static constexpr bool neutral_base_visible[SENSOR_COUNT] = {true, true, true, true, true, true};
+    static constexpr bool alliance_base_visible[SENSOR_COUNT] = {false, true, true, true, false, false};
+
+    std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;
     std::array<Timer, SENSOR_COUNT> disableTimers;
 
@@ -176,7 +207,7 @@ private:
     std::array<int, SENSOR_COUNT> sensor_readings_mm;
     std::array<float, SENSOR_COUNT> sensor_readings_inch;
     std::array<int, SENSOR_COUNT> sensor_confs;
-    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false};
+    std::array<bool, SENSOR_COUNT> disabled_sensors = {false, false, false, false, false, false};
 
     static constexpr int NOISE_POOL_SIZE = 2048;
     static constexpr int NOISE_MASK = NOISE_POOL_SIZE - 1;

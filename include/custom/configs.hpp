@@ -90,7 +90,7 @@ inline lemlib::Drivetrain drivetrain(&leftMotors,
 );
 
 // IMU
-inline ScaledIMU imu(11, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
+inline ScaledIMU imu(6, 360.0, 360.0); // Adjust actual_reading based on your IMU's behavior
 
 // Odometry
 inline pros::Rotation vertRotation(-9);
@@ -151,17 +151,44 @@ inline lemlib::Chassis chassis( drivetrain, // drivetrain settings
 );
 
 // Distance
-enum DISTSENSORS {LEFT, RIGHT};
+enum DISTSENSORS {FRONT, BACK, LEFT, RIGHT, BACK_LEFT, BACK_RIGHT};
 // No distance sensors mounted right now -> all on tempPort. Real ports in comments.
 inline bool distanceSensorsEnabled = true;  // set true once distance sensors are mounted
-inline pros::Distance left_dist(6);    // real: 6
-inline pros::Distance right_dist(5);   // real: 5
+inline pros::Distance front_dist(2);
+inline pros::Distance back_dist(21);
+inline pros::Distance left_dist(3);
+inline pros::Distance right_dist(5);
+inline pros::Distance back_left_dist(4);
+inline pros::Distance back_right_dist(11);
 
-inline std::array<pros::Distance*, 2> DISTANCE_COLLECTION = {&left_dist, &right_dist};
+inline std::array<pros::Distance*, 2> DISTANCE_COLLECTION = {&front_dist, &back_dist, &left_dist, &right_dist, &back_left_dist, &back_right_dist};
 
 // Rcl setup
-inline RclSensor left_rcl(&left_dist, -5.857102, -6.5, 270.0, 15.0);   // 6.5 in behind center; side dist unconfirmed
-inline RclSensor right_rcl(&right_dist, 5.857102, -6.5, 90.0, 15.0);   // 6.5 in behind center; side dist unconfirmed
+/*front
+2.754921 forward, 6.500079 left, 3.327301 high
+
+left
+0.289449 forward, 6.759719 left, 2.077872 high
+
+backLeft
+5.833577 back, 6.104867 left, 5.525000 high, 45deg angle facing back left corner
+
+back
+5.374094 back, 4.756890 right, 3.025004 high
+
+backRight
+5.833577 back, 6.104868 right, 5.525000 high, 45deg angle facing back right corner
+
+right
+0.289449 forward, 6.759720 right, 2.077872 high 
+*/
+inline RclSensor front_rcl(&front_dist, -6.500079, 2.754921, 0.0, 15.0);
+inline RclSensor back_rcl(&back_dist, 4.756890, -5.374094, 180.0, 15.0);
+inline RclSensor left_rcl(&left_dist, -6.759720, 0.289449, 270.0, 15.0);
+inline RclSensor right_rcl(&right_dist, 6.759720, 0.289449, 90.0, 15.0);
+inline RclSensor back_left_rcl(&back_left_dist, -6.104867, -5.833577, 225.0, 15.0);
+inline RclSensor back_right_rcl(&back_right_dist, 6.104868, -5.833577, 135.0, 15.0);
+
 inline RclTracking RclMain(&chassis, 1, false, 0.5, 4.0, 200.0, 6.0, 50);
 inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {&vertRotation, 3.25, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
 

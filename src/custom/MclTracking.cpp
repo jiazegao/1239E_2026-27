@@ -400,18 +400,26 @@ void MclTracking::update_weights() {
 
             // Check for goal base intersection first
 
-            // High sensor special elements
-            if (high_sensor[j]) {
-                // Center base
+            // Center base
+            if (!low_center_base_visible[j]) {
                 p_dist = std::min(p_dist, intersect_circle(sCoord, high_center_base, MAX_RANGE, scos, ssin));
             }
             else {
-                // Center base
                 for (const auto& l_ : low_center_base) {
                     p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
                 }
-                // Neutral bases
-                for (const auto& l_ : low_neutral_bases) {
+            }
+
+            // Neutral bases
+            if (neutral_base_visible[j]) {
+                for (const auto& l_ : neutral_bases) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
+                }
+            }
+
+            // Alliance bases
+            if (alliance_base_visible[j]) {
+                for (const auto& l_ : alliance_bases) {
                     p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
                 }
             }
