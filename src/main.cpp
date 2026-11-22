@@ -52,7 +52,7 @@ void opcontrol() {
 	enableLiftPID = false;
 	startBrainFBDisplay();
 
-	if (!clawHomed) hardResetClaw();
+	hardResetClaw();
 	resetLift();
 
 	while (true) {

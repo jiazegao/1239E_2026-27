@@ -427,7 +427,7 @@ void MclTracking::update_weights() {
             // If didn't intersect any field objections, check the matchloaders and walls
             if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
                 // Matchloaders
-                for (const auto& l_ : universal_match_loaders) {
+                for (const auto& l_ : match_loaders) {
                     p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
                 }
                 // Walls
@@ -443,23 +443,32 @@ void MclTracking::update_weights() {
                 }
             }
         
+            // Negative: the sensor reads shorter than the map predicts
+            float diff = sensor_readings_inch[j] - p_dist;
+
             // Apply angle sigma scaling
             float z;
             if (hit_wall) {
-                z = std::abs(sensor_readings_inch[j] - p_dist) * wall_inv_sigmas[j];
+                z = std::abs(diff) * wall_inv_sigmas[j];
             }
             else {
-                z = std::abs(sensor_readings_inch[j] - p_dist) * inv_sigmas[j];
+                z = std::abs(diff) * inv_sigmas[j];
             }
 
             // Gaussian LUT process
             int lut_idx = (int)(z * 256.0f);
 
+            float sensor_weight;
             if (lut_idx < 1024) {
-                total_weight *= gaussian_lut[lut_idx];
+                sensor_weight = gaussian_lut[lut_idx];
             } else {
-                total_weight *= gaussian_lut[1023] * FAULT_TOLERANCE; 
-            }    
+                sensor_weight = gaussian_lut[1023] * FAULT_TOLERANCE;
+            }
+
+            // Short reading: something off the map may be blocking the beam, so cap the penalty
+            if (diff < 0.0f) sensor_weight = std::max(sensor_weight, SHORT_READING_FLOOR);
+
+            total_weight *= sensor_weight;
         }
         p.weight = total_weight;
     }

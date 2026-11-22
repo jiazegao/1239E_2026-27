@@ -161,7 +161,7 @@ inline pros::Distance right_dist(5);
 inline pros::Distance back_left_dist(4);
 inline pros::Distance back_right_dist(11);
 
-inline std::array<pros::Distance*, 2> DISTANCE_COLLECTION = {&front_dist, &back_dist, &left_dist, &right_dist, &back_left_dist, &back_right_dist};
+inline std::array<pros::Distance*, 6> DISTANCE_COLLECTION = {&front_dist, &back_dist, &left_dist, &right_dist, &back_left_dist, &back_right_dist};
 
 // Rcl setup
 /*front
@@ -208,6 +208,13 @@ inline Circle_Obstacle alliance_base1(23.5, 47.0, 4.0);
 inline Circle_Obstacle alliance_base2(47.0, 23.5, 4.0);
 inline Circle_Obstacle alliance_base3(-23.5, -47.0, 4.0);
 inline Circle_Obstacle alliance_base4(-47.0, -23.5, 4.0);
+
+// Match loaders: 4" boxes on the left and right walls, same as match_loaders in MclTracking.hpp.
+// Radius leaves the same 1.5" margin past the flat sides as the base circles.
+inline Circle_Obstacle match_loader1(68.5, 58.75, 3.5);    // top right
+inline Circle_Obstacle match_loader2(-68.5, 58.75, 3.5);   // top left
+inline Circle_Obstacle match_loader3(-68.5, -58.75, 3.5);  // bottom left
+inline Circle_Obstacle match_loader4(68.5, -58.75, 3.5);   // bottom right
 
 inline std::vector<Line_> leftAutonObstacles = {
     {{-72.0, 72.0}, {32.0, -32.0}},

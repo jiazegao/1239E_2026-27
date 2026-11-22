@@ -187,9 +187,9 @@ void startMcl(float x, float y, float vexTheta, bool resetFront, bool resetLeft,
     if (!distanceSensorsEnabled) return;  // no distance sensors: odom only
 
     // Perform RCL Resets
-    //if (resetFront) RclMain.updateBotPose(&frontL_rcl);
-    //if (resetLeft) RclMain.updateBotPose(&left_rcl);
-    //if (resetBack) RclMain.updateBotPose(&back_rcl);
+    if (resetFront) RclMain.updateBotPose(&front_rcl);
+    if (resetLeft) RclMain.updateBotPose(&left_rcl);
+    if (resetBack) RclMain.updateBotPose(&back_rcl);
     if (resetRight) RclMain.updateBotPose(&right_rcl);
 
     // Reset MCL

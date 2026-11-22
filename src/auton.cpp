@@ -54,9 +54,10 @@ void left3pin(){
     chassis.turnToPoint(20, 25, 500, {.forwards = false}, true);
     hardResetClaw();
     pros::delay(500);
-    openClaw(150, 127);
     chassis.moveToPoint(20, 25, 1900, { .forwards = false, .maxSpeed = 40,});
     startClawIntake(127);
+    pros::delay(300);
+    openClaw(150, 127);
     pros::delay(1200);
     closeClaw(-80, 127);
     pros::delay(600);
@@ -175,7 +176,7 @@ void skills () {
         pros::delay(500);
         moveForward(10, 1300, 60, 1, true);
         pros::delay(300);
-        setLift(LIFT_HEIGHTS[i+1]);
+        setLift(LIFT_HEIGHTS[i]);
         chassis.turnToHeading(180, 700, {}, true);
         chassis.moveToPoint(-47, -47, 1300, {.forwards=false, .maxSpeed = 60}, true);
         setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);

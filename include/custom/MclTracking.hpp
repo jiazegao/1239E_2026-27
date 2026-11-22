@@ -43,6 +43,7 @@ private:
     static constexpr float TRACKING_WHEEL_VARIANCE = 0.02f;
     static constexpr float IMU_VARIANCE = 0.0f; //0.002f;
     static constexpr float FAULT_TOLERANCE = 0.005f;
+    static constexpr float SHORT_READING_FLOOR = 0.01f;
     float DIST_SYNC_PROP = 0.05f;
     static constexpr float THETA_SYNC_PROP = 0.000f;
     static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.02f;
@@ -140,7 +141,7 @@ private:
         {{21.0, 44.5},{26.0, 44.5}},
         {{26.0, 44.5},{26.0, 49.5}},
         {{26.0, 49.5},{21.0, 49.5}}
-    }
+    };
 
     // Sensor mounts
     static constexpr int SENSOR_COUNT = 6;
@@ -156,7 +157,7 @@ private:
     };
     static constexpr bool low_center_base_visible[SENSOR_COUNT] = {true, true, true, true, false, false};
     static constexpr bool neutral_base_visible[SENSOR_COUNT] = {true, true, true, true, true, true};
-    static constexpr bool alliance_base_visible[SENSOR_COUNT] = {false, true, true, true, false, false};
+    static constexpr bool alliance_base_visible[SENSOR_COUNT] = {true, true, true, true, false, false};
 
     std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;

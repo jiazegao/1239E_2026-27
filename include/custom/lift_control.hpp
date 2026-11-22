@@ -30,7 +30,7 @@ constexpr float LIFT_HEIGHTS[6] = {0.0, 1000.0/7, 2000.0/7, 3000.0/7, 4000.0/7, 
 constexpr float LIFT_MAX_MOTOR_DEG = 4850.0;
 
 inline bool enableLiftPID = false;
-inline bool clawHomed = false;
+inline bool clawHomed = true;
 
 /*
     - Must be called within void initialize()
