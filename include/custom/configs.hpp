@@ -94,7 +94,7 @@ inline ScaledIMU imu(6, 360.0, 360.0); // Adjust actual_reading based on your IM
 
 // Odometry
 inline pros::Rotation vertRotation(-9);
-inline lemlib::TrackingWheel vertPod(&vertRotation, 3.25, 0);
+inline lemlib::TrackingWheel vertPod(&vertRotation, 2.75, 0);
 
 inline lemlib::OdomSensors sensors( &vertPod,
                                     nullptr,
@@ -190,10 +190,10 @@ inline RclSensor back_left_rcl(&back_left_dist, -6.104867, -5.833577, 225.0, 15.
 inline RclSensor back_right_rcl(&back_right_dist, 6.104868, -5.833577, 135.0, 15.0);
 
 inline RclTracking RclMain(&chassis, 1, false, 0.5, 4.0, 200.0, 6.0, 50);
-inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {&vertRotation, 3.25, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
+inline MclTracking MclMain(&chassis, &drivetrain, DISTANCE_COLLECTION, {&vertRotation, 2.75, 0.0}, {nullptr, 0.0, 0.0}, 0, 0, 0, true);
 
 enum MCL_Log_Format {DISABLED, SDCARD, SCREEN};
-inline MCL_Log_Format mclLogType = SCREEN;
+inline MCL_Log_Format mclLogType = SDCARD;
 inline std::ofstream* mclLog = nullptr;
 inline Timer mclLogTimer(100000000.0f);
 

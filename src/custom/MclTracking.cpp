@@ -371,8 +371,18 @@ void MclTracking::update_weights() {
         float total_weight = 1.0f;
         auto& p = derefP[i];
 
-        // Instant DQ if out of bounds
+        // Instant DQ if out of bounds or differ too much from lemlib position
         if (std::abs(p.pose.x) > FIELD_HALF_LENGTH || std::abs(p.pose.y) > FIELD_HALF_LENGTH) {
+            p.weight = 1e-35f;
+            continue;
+        }
+
+        auto robot_pos = chassis->getPose();
+        float diff_x = robot_pos.x - p.pose.x;
+        float diff_y = robot_pos.y - p.pose.y;
+
+        float diff_sqr = diff_x * diff_x + diff_y * diff_y;
+        if (diff_sqr > 225.0f) {
             p.weight = 1e-35f;
             continue;
         }
@@ -424,6 +434,11 @@ void MclTracking::update_weights() {
                 }
             }
 
+            // Pins & Cups
+            for (const auto& l_ : pins_and_cups) {
+                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
+                }
+
             // If didn't intersect any field objections, check the matchloaders and walls
             if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
                 // Matchloaders
@@ -464,9 +479,6 @@ void MclTracking::update_weights() {
             } else {
                 sensor_weight = gaussian_lut[1023] * FAULT_TOLERANCE;
             }
-
-            // Short reading: something off the map may be blocking the beam, so cap the penalty
-            if (diff < 0.0f) sensor_weight = std::max(sensor_weight, SHORT_READING_FLOOR);
 
             total_weight *= sensor_weight;
         }
@@ -799,30 +811,23 @@ void MclTracking::stopAsyncLogger() {
 }
 
 float MclTracking::getDTWheelDegrees() {
-    if (dt == nullptr || dt->leftMotors == nullptr || dt->rightMotors == nullptr) {
-        return 0.0f;
-    }
-
-    // Get average raw rotations
-    std::vector<double> leftPos = dt->leftMotors->get_position_all();
-    std::vector<double> rightPos = dt->rightMotors->get_position_all();
+    if (dt == nullptr || dt->leftMotors == nullptr || dt->rightMotors == nullptr) return 0.0f;
 
     double sum = 0;
-    for (double pos : leftPos) sum += pos;
-    for (double pos : rightPos) sum += pos;
-
-    // 6 wheels, 3 on each side
-    float avgRotates = static_cast<float>(sum) * ODOM_MULTIPLIER;
-
-    // Calculate Manual Gear Ratio
-    // Blue cartridge (11W) = 600 RPM internal
-    float gearRatio = dt->rpm * RPM_MULTIPLIER;
-
-    // Convert Rotations to Wheel Degrees
-    // Multiply by gearRatio converts motor degrees to wheel degrees
-    float wheelDegrees = avgRotates * gearRatio * 360.0;
-
-    return wheelDegrees;
+    int count = 0;
+    for (pros::MotorGroup* side : {dt->leftMotors, dt->rightMotors}) {
+        std::vector<double> pos = side->get_position_all();
+        std::vector<pros::MotorGears> gears = side->get_gearing_all();
+        std::vector<pros::MotorUnits> units = side->get_encoder_units_all();
+        for (size_t i = 0; i < pos.size(); i++) {
+            if (std::isinf(pos[i])) continue;  // unplugged motor returns PROS_ERR_F
+            double motorDeg = (units[i] == pros::MotorUnits::rotations) ? pos[i] * 360.0 : pos[i];
+            double motorRpm = (gears[i] == pros::MotorGears::green) ? 200.0 : 600.0;
+            sum += motorDeg * dt->rpm / motorRpm;  // motor degrees -> wheel degrees
+            count++;
+        }
+    }
+    return count > 0 ? static_cast<float>(sum / count) : 0.0f;
 }
 
 Pose MclTracking::getRawMcl() {

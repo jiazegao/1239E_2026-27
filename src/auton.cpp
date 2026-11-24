@@ -37,10 +37,10 @@ void left3pin(){
     startClawIntake(80);  // start intaking the pin
     pros::delay(1500);
     //Move to alliance goal and pin drop
-    chassis.moveToPoint(39.5, 0, 1000, { .forwards = false, .maxSpeed = 100,}, true);
+    chassis.moveToPoint(47.0, 0, 2000, { .forwards = false, .maxSpeed = 100,}, true);
     setLift(LIFT_HEIGHTS[FIRST_STACK]+3.0f); 
-    chassis.turnToPoint(39.5, 22, 500, {.forwards = false}, true);
-    chassis.moveToPoint(39.5, 22, 1600, {.forwards = false, .maxSpeed = 50}, true);
+    chassis.turnToPoint(47.0, 22, 500, {.forwards = false}, true);
+    chassis.moveToPoint(47.0, 22, 2000, {.forwards = false, .maxSpeed = 50}, true);
     //Drop pin and back up
     pros::delay(800);
     setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);  // drop pin
@@ -51,10 +51,10 @@ void left3pin(){
     //back up
     chassis.moveToPoint(44, 10, 1000, { .maxSpeed = 100}, true);
     //get cup and score
-    chassis.turnToPoint(20, 25, 500, {.forwards = false}, true);
+    chassis.turnToPoint(23.5, 23.5, 500, {.forwards = false}, true);
     hardResetClaw();
     pros::delay(500);
-    chassis.moveToPoint(20, 25, 1900, { .forwards = false, .maxSpeed = 40,});
+    chassis.moveToPoint(23.5, 23.5, 1900, { .forwards = false, .maxSpeed = 40,});
     startClawIntake(127);
     pros::delay(300);
     openClaw(150, 127);
@@ -63,8 +63,8 @@ void left3pin(){
     pros::delay(600);
     //score
     setLift(SECOND_STACK);
-    chassis.turnToPoint(44, 34, 600, {.forwards = false}, true);
-    chassis.moveToPoint(44, 34, 1700, { .forwards = false, .maxSpeed = 70,}, false);
+    chassis.turnToPoint(47, 23.5, 600, {.forwards = false}, true);
+    chassis.moveToPoint(47, 23.5, 1700, { .forwards = false, .maxSpeed = 70,}, false);
     pros::delay(200);
     setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
     pros::delay(1200);

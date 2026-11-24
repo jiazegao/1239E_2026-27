@@ -27,27 +27,24 @@ private:
     static constexpr float MAX_VELO_RESAMPLE = 100.0f;
     static constexpr int LOG_AMOUNT = 1;
     static constexpr int LOG_RATIO = PARTICLE_COUNT / LOG_AMOUNT;
-    static constexpr float ODOM_MULTIPLIER = 0.25f;
-    static constexpr float RPM_MULTIPLIER = 0.0016666666667f;
 
     static constexpr float MAX_RANGE = 100.0f;
-    static constexpr float DIST_RESAMPLE_VARIANCE = 1.0f;
+    static constexpr float DIST_RESAMPLE_VARIANCE = 1.5f;
     static constexpr float THETA_RESAMPLE_VARIANCE = 0.0f; //0.005f;
     static constexpr float MAX_THETA_DEVIATION = 0.0f; //0.08f;
     static constexpr int CONFIDENCE_THRESHOLD = 20;
     static constexpr float CONFIDENCE_SCALING_BASE = 32.0f;
     static constexpr float RIGHT_ANG_MULTIPLIER = 0.5f;
     static constexpr float RIGHT_ANG_CONST = 2.0 / M_PI * RIGHT_ANG_MULTIPLIER;
-    static constexpr float SENSOR_COUNT_SCALING = 0.50f;
+    static constexpr float SENSOR_COUNT_SCALING = 0.1667f;
     
     static constexpr float TRACKING_WHEEL_VARIANCE = 0.02f;
     static constexpr float IMU_VARIANCE = 0.0f; //0.002f;
     static constexpr float FAULT_TOLERANCE = 0.005f;
-    static constexpr float SHORT_READING_FLOOR = 0.01f;
-    float DIST_SYNC_PROP = 0.05f;
+    float DIST_SYNC_PROP = 0.01f;
     static constexpr float THETA_SYNC_PROP = 0.000f;
-    static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.02f;
-    static constexpr float HORIZ_CONSTANT_NOISE = 0.02f;
+    static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.05f;
+    static constexpr float HORIZ_CONSTANT_NOISE = 0.05f;
 
     static constexpr float MSPT = 30.0f;
     static constexpr float INV_MSPT = 1.0f / MSPT;
@@ -143,6 +140,38 @@ private:
         {{26.0, 49.5},{21.0, 49.5}}
     };
 
+    static constexpr Line_ pins_and_cups[24] = {
+        // Top Left
+        {{-49.5, 47.5}, {-45.5, 47.5}},
+        {{-47.5, 49.5}, {-47.5, 45.5}},
+        {{-25.5, 23.5}, {-21.5, 23.5}},
+        {{-23.5, 25.5}, {-23.5, 21.5}},
+        // Top Right
+        {{49.5, 47.5}, {45.5, 47.5}},
+        {{47.5, 49.5}, {47.5, 45.5}},
+        {{25.5, 23.5}, {21.5, 23.5}},
+        {{23.5, 25.5}, {23.5, 21.5}},
+        // Bottom Left
+        {{-49.5, -47.5}, {-45.5, -47.5}},
+        {{-47.5, -49.5}, {-47.5, -45.5}},
+        {{-25.5, -23.5}, {-21.5, -23.5}},
+        {{-23.5, -25.5}, {-23.5, -21.5}},
+        // Bottom Right
+        {{49.5, -47.5}, {45.5, -47.5}},
+        {{47.5, -49.5}, {47.5, -45.5}},
+        {{25.5, -23.5}, {21.5, -23.5}},
+        {{23.5, -25.5}, {23.5, -21.5}},
+        // Middle
+        {{-2.0, 23.5}, {2.0, 23.5}},
+        {{0.0, 25.5}, {0.0, 21.5}},
+        {{-2.0, -23.5}, {2.0, -23.5}},
+        {{0.0, -25.5}, {0.0, -21.5}},
+        {{21.5, 0.0}, {25.5, 0.0}},
+        {{23.5, -2.0}, {23.5, 2.0}},
+        {{-21.5, 0.0}, {-25.5, 0.0}},
+        {{-23.5, -2.0}, {-23.5, 2.0}}
+    };
+
     // Sensor mounts
     static constexpr int SENSOR_COUNT = 6;
     static constexpr Pose sensor_mounts[SENSOR_COUNT] = {
@@ -155,9 +184,9 @@ private:
         {-5.833577f, 6.104867f, std::numbers::pi*3/4},
         {-5.833577f, -6.104868f, std::numbers::pi*5/4}
     };
-    static constexpr bool low_center_base_visible[SENSOR_COUNT] = {true, true, true, true, false, false};
+    static constexpr bool low_center_base_visible[SENSOR_COUNT] = {false, false, false, false, false, false};
     static constexpr bool neutral_base_visible[SENSOR_COUNT] = {true, true, true, true, true, true};
-    static constexpr bool alliance_base_visible[SENSOR_COUNT] = {true, true, true, true, false, false};
+    static constexpr bool alliance_base_visible[SENSOR_COUNT] = {false, false, false, false, false, false};
 
     std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;

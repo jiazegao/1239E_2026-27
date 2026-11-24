@@ -26,12 +26,15 @@ void initialize() {
 	//initBrainDisplay();
 
 	// Override gearset for 5.5 motors
-	leftMotors.set_gearing(pros::MotorGears::green, 2);
-	rightMotors.set_gearing(pros::MotorGears::green, 2);
+	leftMotors.set_gearing(pros::MotorGears::green, 0);
+	rightMotors.set_gearing(pros::MotorGears::green, 0);
+
+	leftMotors.set_encoder_units_all(pros::MotorEncoderUnits::degrees);
+	rightMotors.set_encoder_units_all(pros::MotorEncoderUnits::degrees);
 
 	liftMotors.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
-	liftMotors.set_encoder_units(pros::MotorEncoderUnits::degrees);
-	liftMotors.set_zero_position(0.0);
+	liftMotors.set_encoder_units_all(pros::MotorEncoderUnits::degrees);
+	liftMotors.set_zero_position_all(0.0);
 }
 
 void disabled() {}
@@ -55,6 +58,8 @@ void opcontrol() {
 
 	hardResetClaw();
 	resetLift();
+
+	startMcl(50.0, 50.0, 270.0, false, false, true, true);
 
 	while (true) {
 
