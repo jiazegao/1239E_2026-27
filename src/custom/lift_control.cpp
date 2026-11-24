@@ -34,9 +34,9 @@ void openClaw(float angle, int velocity) {
     if (!clawHomed) return;
     clawGrippersMotor.move_absolute(angle, velocity);
 }
-void closeClaw(float angle, int velocity) {
+void closeClaw(int velocity) {
     if (!clawHomed) return;
-    clawGrippersMotor.move_absolute(angle, velocity);
+    clawGrippersMotor.move_absolute(0, velocity);
 }
 void stopClaw() {
     if (!clawHomed) return;

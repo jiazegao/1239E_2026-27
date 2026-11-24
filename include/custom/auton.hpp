@@ -9,3 +9,5 @@ void left3pinv2();
 void testPid();
 void skills();
 void safe_skills();
+
+void left5pin();
