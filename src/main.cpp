@@ -47,7 +47,7 @@ void autonomous() {
 	// hardResetClaw();
 	clawGrippersMotor.set_zero_position(13.0);
 	// runAuton();
-	left3pin();
+	left5pin();
 }
 
 void opcontrol() {

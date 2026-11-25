@@ -41,10 +41,11 @@ private:
     static constexpr float TRACKING_WHEEL_VARIANCE = 0.02f;
     static constexpr float IMU_VARIANCE = 0.0f; //0.002f;
     static constexpr float FAULT_TOLERANCE = 0.005f;
-    float DIST_SYNC_PROP = 0.01f;
+    float DIST_SYNC_PROP = 0.015f;
     static constexpr float THETA_SYNC_PROP = 0.000f;
     static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.05f;
     static constexpr float HORIZ_CONSTANT_NOISE = 0.05f;
+    static constexpr float MAX_DIFF_SQR = 400.0f;
 
     static constexpr float MSPT = 30.0f;
     static constexpr float INV_MSPT = 1.0f / MSPT;
@@ -171,6 +172,7 @@ private:
         {{-21.5, 0.0}, {-25.5, 0.0}},
         {{-23.5, -2.0}, {-23.5, 2.0}}
     };
+    std::array<bool, 12> cup_and_pin_disabled = {false, false, false, false, false, false, false, false, false, false, false, false};
 
     // Sensor mounts
     static constexpr int SENSOR_COUNT = 6;
@@ -307,6 +309,8 @@ public:
     void setObstacles(std::vector<Line_>* newLineObstaclesPtr = nullptr, std::vector<Circle>* newCirleObstaclesPtr = nullptr);
 
     void setDrift(float verticalDrift, float horizontalDrift);
+
+    void setPinAndCupVisibility(int index, bool visible);
 
     float getDTWheelDegrees();
 

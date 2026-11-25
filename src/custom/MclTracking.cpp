@@ -382,7 +382,7 @@ void MclTracking::update_weights() {
         float diff_y = robot_pos.y - p.pose.y;
 
         float diff_sqr = diff_x * diff_x + diff_y * diff_y;
-        if (diff_sqr > 225.0f) {
+        if (diff_sqr > MAX_DIFF_SQR) {
             p.weight = 1e-35f;
             continue;
         }
@@ -435,9 +435,11 @@ void MclTracking::update_weights() {
             }
 
             // Pins & Cups
-            for (const auto& l_ : pins_and_cups) {
-                    p_dist = std::min(p_dist, intersect_line(sCoord, l_, MAX_RANGE, scos, ssin));
-                }
+            for (int p_c_i = 0; p_c_i < 12; p_c_i++) {
+                if (cup_and_pin_disabled[p_c_i]) continue;
+                p_dist = std::min(p_dist, intersect_line(sCoord, pins_and_cups[p_c_i*2], MAX_RANGE, scos, ssin));
+                p_dist = std::min(p_dist, intersect_line(sCoord, pins_and_cups[p_c_i*2+1], MAX_RANGE, scos, ssin));
+            }
 
             // If didn't intersect any field objections, check the matchloaders and walls
             if (std::abs(p_dist-MAX_RANGE) < 1e-6) {
@@ -762,6 +764,10 @@ void MclTracking::disableSensFor(int sens, float ms) {
 void MclTracking::setObstacles(std::vector<Line_>* newLineObstaclesPtr, std::vector<Circle>* newCirleObstaclesPtr) {
     disabling_line_obstacles = newLineObstaclesPtr;
     disabling_circle_obstacles = newCirleObstaclesPtr;
+}
+
+void MclTracking::setPinAndCupVisibility(int index, bool visible) {
+    cup_and_pin_disabled[index] = visible;
 }
 
 void MclTracking::startAsyncLogger() {
