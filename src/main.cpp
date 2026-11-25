@@ -46,8 +46,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	// hardResetClaw();
 	clawGrippersMotor.set_zero_position(13.0);
-	// runAuton();
-	left5pin();
+	runAuton();
 }
 
 void opcontrol() {
@@ -58,8 +57,6 @@ void opcontrol() {
 
 	hardResetClaw();
 	resetLift();
-
-	startMcl(50.0, 50.0, 270.0, false, false, true, true);
 
 	while (true) {
 

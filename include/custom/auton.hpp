@@ -11,3 +11,4 @@ void skills();
 void safe_skills();
 
 void left5pin();
+void right5pin();

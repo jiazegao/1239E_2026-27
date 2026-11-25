@@ -16,8 +16,9 @@ struct AutonEntry {
 // Auton Collection
 inline int autonCount = 0;
 inline void noAuton() {}
-constexpr std::array<AutonEntry, 1> AutonCollection = {{
-    {"LEFT 3-PIN", left3pin}
+constexpr std::array<AutonEntry, 2> AutonCollection = {{
+    {"LEFT 5-PIN", left5pin},
+    {"RIGHT 5-PIN", right5pin}
 }};
 
 // GUI objects
