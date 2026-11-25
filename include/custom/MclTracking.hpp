@@ -29,7 +29,7 @@ private:
     static constexpr int LOG_RATIO = PARTICLE_COUNT / LOG_AMOUNT;
 
     static constexpr float MAX_RANGE = 100.0f;
-    static constexpr float DIST_RESAMPLE_VARIANCE = 1.5f;
+    static constexpr float DIST_RESAMPLE_VARIANCE = 2.0f;
     static constexpr float THETA_RESAMPLE_VARIANCE = 0.0f; //0.005f;
     static constexpr float MAX_THETA_DEVIATION = 0.0f; //0.08f;
     static constexpr int CONFIDENCE_THRESHOLD = 20;
@@ -41,11 +41,11 @@ private:
     static constexpr float TRACKING_WHEEL_VARIANCE = 0.02f;
     static constexpr float IMU_VARIANCE = 0.0f; //0.002f;
     static constexpr float FAULT_TOLERANCE = 0.005f;
-    float DIST_SYNC_PROP = 0.015f;
+    float DIST_SYNC_PROP = 0.02f;
     static constexpr float THETA_SYNC_PROP = 0.000f;
     static constexpr float HORIZ_DEPENDENT_VARIANCE_PROP = 0.05f;
     static constexpr float HORIZ_CONSTANT_NOISE = 0.05f;
-    static constexpr float MAX_DIFF_SQR = 400.0f;
+    static constexpr float MAX_DIFF_SQR = 225.0f;
 
     static constexpr float MSPT = 30.0f;
     static constexpr float INV_MSPT = 1.0f / MSPT;
@@ -188,7 +188,7 @@ private:
     };
     static constexpr bool low_center_base_visible[SENSOR_COUNT] = {false, false, false, false, false, false};
     static constexpr bool neutral_base_visible[SENSOR_COUNT] = {true, true, true, true, true, true};
-    static constexpr bool alliance_base_visible[SENSOR_COUNT] = {false, false, false, false, false, false};
+    static constexpr bool alliance_base_visible[SENSOR_COUNT] = {true, true, true, true, true, true};
 
     std::array<pros::Distance*, SENSOR_COUNT> distance_collection = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     std::array<Trig, SENSOR_COUNT> mountTrigs;

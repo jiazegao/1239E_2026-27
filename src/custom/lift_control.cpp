@@ -136,6 +136,27 @@ void hardResetClaw() {
     });
 }
 
+pros::Task clawListenTask([](){});
+void clawListen(float target_x, float target_y, float distance, int timeout_ms) {
+    clawListenTask = pros::Task([=](){
+        uint32_t start = pros::millis();
+        
+        while (pros::millis() - start < timeout_ms) {
+            auto botPos = chassis.getPose();
+
+            float bot_x = botPos.x;
+            float bot_y = botPos.y;
+
+            float diff_sqr = (bot_x - target_x) * (bot_x - target_x) + (bot_y - target_y) * (bot_y - target_y);
+            if (diff_sqr < distance * distance) {
+                closeClaw();
+            }
+
+            pros::delay(20);
+        }
+    });
+}
+
 float passive_height = 0.0;
 bool liftOnPID = false;
 

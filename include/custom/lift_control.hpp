@@ -43,4 +43,6 @@ void resetLift();
 bool isLiftResetting();
 void hardResetClaw();
 
+void clawListen(float target_x, float target_y, float distance, int timeout_ms = 1000);
+
 void updateLiftMotors();
