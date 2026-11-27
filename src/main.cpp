@@ -43,6 +43,7 @@ void competition_initialize() {}
 
 void autonomous() {
 	enableLiftPID = true;
+
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	// hardResetClaw();
 	clawGrippersMotor.set_zero_position(13.0);

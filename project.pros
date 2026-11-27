@@ -635,7 +635,7 @@
       }
     },
     "upload_options": {
-      "after": "run"
+      "after": "none"
     },
     "use_early_access": false
   }

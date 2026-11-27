@@ -173,6 +173,8 @@ void left5pin_curr() {
     // Back up then grab second pin
     chassis.moveToPoint(36, 16, 950, {}, true);
     chassis.turnToPoint(23.5, 23.5, 500, {.forwards = false}, true);
+        setLift(LIFT_HEIGHTS[GRAB_HEIGHT]);  // drop pin
+
     hardResetClaw();
     chassis.moveToPoint(23.5, 23.5, 1000, {.forwards = false, .maxSpeed = 40}, true);
     startClawIntake(127);
@@ -216,7 +218,7 @@ void left5pin_curr() {
     // Grab fourth pin
     MclMain.setDistSyncProp(0.00f);
     chassis.moveToPoint(56, 32, 1200, {}, false);
-    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
+    setLift(LIFT_HEIGHTS[GRAB_HEIGHT]);
     chassis.turnToHeading(309, 700, {}, false);
     MclMain.setDistSyncProp(0.02f);
     leftMotors.move(-40);
@@ -237,7 +239,7 @@ void left5pin_curr() {
     setLift(LIFT_HEIGHTS[SECOND_STACK]);
     chassis.moveToPoint(47.5, -23.5, 1200, {.forwards = false, .maxSpeed = 50}, true);
     pros::delay(200);
-    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
+    setLift(LIFT_HEIGHTS[FIRST_STACK]);
 }
 
 // OLD
@@ -245,6 +247,7 @@ void left5pin() {
     // Initialize
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.setPose(57, 6.75, 90);
+
     closeClaw();
     MclMain.setObstacles(&leftAutonObstacles, nullptr);
     startMcl(57, 6.75, 90, true, false, false, false);
@@ -258,7 +261,8 @@ void left5pin() {
     // Score first pin
     chassis.moveToPoint(43, 23.5, 1000, {.forwards = false, .maxSpeed = 70, .minSpeed = 40}, true);
     pros::delay(200);
-    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);  // drop pin
+    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
+  // drop pin
     pros::delay(1000);
     openClaw(150, 127);
     reverseClawIntake(20);
@@ -268,6 +272,8 @@ void left5pin() {
     chassis.moveToPoint(40, 12, 900, {}, true);
     chassis.turnToPoint(23.5, 23.5, 500, {.forwards = false}, true);
     hardResetClaw();
+        setLift(LIFT_HEIGHTS[IDLE_HEIGHT] );  // drop pin
+
     chassis.moveToPoint(23.5, 23.5, 1000, {.forwards = false, .maxSpeed = 35}, true);
     startClawIntake(127);
     pros::delay(300);
@@ -303,7 +309,7 @@ void left5pin() {
     pros::delay(800);
     setLift(LIFT_HEIGHTS[FIRST_STACK]);
     pros::delay(600);
-    openClaw(150, 127);
+    openClaw(130, 127);
     reverseClawIntake(20);
     pros::delay(100);
 
@@ -311,7 +317,7 @@ void left5pin() {
     MclMain.setDistSyncProp(0.00f);
     chassis.moveToPoint(55, 33, 1000, {}, false);
     setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
-    chassis.turnToHeading(309, 700, {}, false);
+    chassis.turnToHeading(320, 700, {}, false);
     MclMain.setDistSyncProp(0.02f);
     leftMotors.move(-40);
     rightMotors.move(-40);
@@ -326,12 +332,12 @@ void left5pin() {
 
     // Score fourth pin
     chassis.turnToHeading(20, 500, {}, true);
-    chassis.moveToPoint(47.5, -23.5, 800, {.forwards = false}, true);
+    chassis.moveToPoint(50.5, -23.5, 800, {.forwards = false}, true);
     pros::delay(200);
     setLift(LIFT_HEIGHTS[SECOND_STACK]);
-    chassis.moveToPoint(47.5, -23.5, 1200, {.forwards = false, .maxSpeed = 50}, true);
+    chassis.moveToPoint(50.5, -23.5, 1200, {.forwards = false, .maxSpeed = 50}, true);
     pros::delay(600);
-    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
+    setLift(LIFT_HEIGHTS[GRAB_HEIGHT]);
 }
 
 void right5pin() {
@@ -427,99 +433,166 @@ void right5pin() {
     setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
 }
 
-
-void skills () {
+void skills() {
+    // Initialize
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    chassis.setPose(-59, -35, 225);
+    chassis.setPose(57, 6.75, 90);
     closeClaw();
-    resetLift();
-    pros::delay(200);
-    //startMcl(-59, -35, 225, false, true, false, false);
+    startMcl(57, 6.75, 90, true, false, false, false);
     
-    // Score first pin
-    pros::delay(200);
-    setLift(LIFT_HEIGHTS[FIRST_STACK]);
-    moveForward(-15, 1500, 60, 1, true);
-    pros::delay(1200);
-    resetLift();
-    pros::delay(1500);
-    openClaw(150, 127);
-    pros::delay(500);
-    chassis.moveToPoint(-40, -58, 2000, {.maxSpeed = 100 }, true);
-    chassis.turnToHeading(90, 700, {}, true);
-    pros::delay(800);
-
-    // Cycle
-    for (int i = 0; i < 6; i ++) {
-        moveForward(-15, 1300, 60, 1, true);
-        pros::delay(1000);
-        closeClaw(127);
-        pros::delay(500);
-        moveForward(10, 1300, 60, 1, true);
-        pros::delay(300);
-        setLift(LIFT_HEIGHTS[i]);
-        chassis.turnToHeading(180, 700, {}, true);
-        chassis.moveToPoint(-47, -47, 1300, {.forwards=false, .maxSpeed = 60}, true);
-        setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
-        pros::delay(1500);
-        openClaw(150, 127);
-        pros::delay(500);
-        chassis.moveToPoint(-42, -58, 1000, {.maxSpeed = 100 }, true);
-        chassis.turnToHeading(90, 700, {}, true);
-    }
-
-    // Go to mid
-    moveForward(20, 1300, 60, 1, true);
-    chassis.moveToPoint(0, -10, 2000, {.maxSpeed = 100 }, true);
-}
-
-void safe_skills() {
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    chassis.setPose(57, 0, 90);
-    closeClaw();
-    pros::delay(200);
-    MclMain.setObstacles(&leftAutonObstacles, nullptr);
-    startMcl(57, 0, 90, false, false, false, false);
-    
+    // Toggle
     enableLiftPID = true;     // lift PID holds the target height
-    resetLift();             // drive to bottom + zero encoder; PID waits until it's done
-    setLift(LIFT_HEIGHTS[THIRD_STACK] + 200.0f/7); // THIRD_STACK + 200 motor deg
+    setLift(LIFT_HEIGHTS[THIRD_STACK] + 140.0f/7); // THIRD_STACK + 200 motor deg
     startClawIntake(80);  // start intaking the pin
-    pros::delay(1500);
-    //Move to alliance goal and pin drop
-    chassis.moveToPoint(39.5, 0, 1000, { .forwards = false, .maxSpeed = 100,}, true);
-    setLift(LIFT_HEIGHTS[FIRST_STACK]+3.0f); 
-    chassis.turnToPoint(39.5, 22, 500, {.forwards = false}, true);
-    chassis.moveToPoint(39.5, 22, 1600, {.forwards = false, .maxSpeed = 50}, true);
-    //Drop pin and back up
-    pros::delay(800);
-    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);  // drop pin
-    pros::delay(500);
-    openClaw(-150, 127);  // open wider for the drop
-    reverseClawIntake(50);
-    pros::delay(1000);
-    //back up
-    chassis.moveToPoint(44, 10, 1000, { .maxSpeed = 100}, true);
-    //get cup and score
-    chassis.turnToPoint(20, 25, 500, {.forwards = false}, true);
-    hardResetClaw();
-    pros::delay(500);
-    openClaw(150, 127);
-    chassis.moveToPoint(20, 25, 1900, { .forwards = false, .maxSpeed = 40,});
-    startClawIntake(127);
-    pros::delay(1200);
-    closeClaw(127);
-    pros::delay(600);
-    //score
-    setLift(SECOND_STACK);
-    chassis.turnToPoint(44, 34, 600, {.forwards = false}, true);
-    chassis.moveToPoint(44, 34, 1700, { .forwards = false, .maxSpeed = 70,}, false);
+    pros::delay(700);
+
+    // Score first pin
+    chassis.moveToPoint(43, 23.5, 1000, {.forwards = false, .maxSpeed = 70, .minSpeed = 40}, true);
     pros::delay(200);
     setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
-    pros::delay(1200);
+    // drop pin
+    pros::delay(1000);
     openClaw(150, 127);
-    pros::delay(800);
+    reverseClawIntake(20);
+    pros::delay(100);
 
-    moveForward(10, 700, 127, 1, false);
-    chassis.moveToPoint(0, 0, 2000, {.maxSpeed=50}, true);
+    // Back up then grab second pin
+    chassis.moveToPoint(40, 12, 900, {}, true);
+    chassis.turnToPoint(23.5, 23.5, 500, {.forwards = false}, true);
+    hardResetClaw();
+    setLift(LIFT_HEIGHTS[IDLE_HEIGHT] );  // drop pin
+
+    chassis.moveToPoint(23.5, 23.5, 1000, {.forwards = false, .maxSpeed = 35}, true);
+    startClawIntake(127);
+    pros::delay(300);
+    openClaw(150, 127);
+    clawListen(23.5, 23.5, 9.0f, 1000);
+    pros::delay(700);
+
+    // Score second pin
+    MclMain.setPinAndCupVisibility(3, false);
+    setLift(LIFT_HEIGHTS[SECOND_STACK]);
+    chassis.turnToHeading(250, 400, {}, true);
+    chassis.moveToPoint(47, 24, 1000, {.forwards = false, .maxSpeed = 60}, true);
+    pros::delay(700);
+    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
+    pros::delay(500);
+    openClaw(150, 127);
+    reverseClawIntake(20);
+    pros::delay(300);
+
+    // Grab third pin
+    chassis.moveToPoint(37, 36, 1100, {}, true);
+    chassis.turnToPoint(47.5, 47.5, 500, {.forwards=false}, true);
+    chassis.moveToPoint(47.5, 47.5, 700, {.forwards = false, .maxSpeed = 40}, true);
+    startClawIntake(127);
+    clawListen(47.5, 47.5, 9.0f, 1000);
+    pros::delay(700);
+
+    // Score third pin
+    MclMain.setPinAndCupVisibility(2, false);
+    setLift(LIFT_HEIGHTS[THIRD_STACK]);
+    chassis.turnToHeading(345, 500, {}, true);
+    chassis.moveToPoint(48, 23.5, 1200, {.forwards = false, .maxSpeed = 60}, true);
+    pros::delay(800);
+    setLift(LIFT_HEIGHTS[FIRST_STACK]);
+    pros::delay(600);
+    openClaw(130, 127);
+    reverseClawIntake(20);
+    pros::delay(100);
+
+    // Grab & score fourth and fifth
+    std::pair<LIFT_STAGES, LIFT_STAGES> lift_height_config_1[2] = {
+        {LIFT_STAGES::FOURTH_STACK, LIFT_STAGES::SECOND_STACK}, 
+        {LIFT_STAGES::FIFTH_STACK, LIFT_STAGES::THIRD_STACK}
+    };
+
+    for (int i = 0; i < 2; i++) {
+        auto heights = lift_height_config_1[i];
+        MclMain.set_pose(RclMain.updateBotPose(&right_rcl).second, RclMain.updateBotPose(&front_rcl).second, chassis.getPose().theta);
+        
+        chassis.moveToPoint(47.5, 58.5, 1500, {}, true);
+        pros::delay(500);
+        setLift(LIFT_HEIGHTS[GRAB_HEIGHT]);
+        chassis.turnToHeading(270, 600, {}, true);
+        moveForward(-30, 2000, 60, 1, true);
+        startClawIntake();
+        pros::delay(1500);
+        closeClaw();
+        pros::delay(500);
+        
+        chassis.moveToPoint(47.5, 58.5, 1500, {}, true);
+        chassis.turnToHeading(0, 600, {}, true);
+        chassis.moveToPoint(47.5, 23.5, 2000, {.forwards=false, .maxSpeed=60}, true);
+        setLift(LIFT_HEIGHTS[heights.first]);
+        pros::delay(2000);
+        setLift(LIFT_HEIGHTS[heights.second]);
+        pros::delay(600);
+        openClaw(130, 127);
+        reverseClawIntake(20);
+        pros::delay(100);
+    }
+
+    // Start a new stack - Score 1 pin + 3 stacks
+    std::pair<LIFT_STAGES, LIFT_STAGES> lift_height_config_2[4] = {
+        {LIFT_STAGES::FIRST_STACK, LIFT_STAGES::IDLE_HEIGHT}, 
+        {LIFT_STAGES::SECOND_STACK, LIFT_STAGES::IDLE_HEIGHT},
+        {LIFT_STAGES::THIRD_STACK, LIFT_STAGES::FIRST_STACK},
+        {LIFT_STAGES::FOURTH_STACK, LIFT_STAGES::SECOND_STACK}
+    };
+
+    for (int i = 0; i < 4; i++) {
+        auto heights = lift_height_config_2[i];
+
+        chassis.moveToPoint(47.5, 58.5, 1500, {}, true);
+        pros::delay(500);
+        setLift(LIFT_HEIGHTS[GRAB_HEIGHT]);
+        chassis.turnToHeading(270, 600, {}, true);
+        moveForward(-30, 2000, 60, 1, true);
+        startClawIntake();
+        pros::delay(1500);
+        closeClaw();
+        pros::delay(500);
+        
+        chassis.moveToPoint(23.5, 58.5, 2000, {}, true);
+        pros::delay(1000);
+        setLift(LIFT_HEIGHTS[heights.first]);
+        chassis.turnToHeading(0, 600, {}, true);
+        chassis.moveToPoint(23.5, 47.5, 1000, {.forwards=false, .maxSpeed=60}, true);
+        pros::delay(500);
+        setLift(LIFT_HEIGHTS[heights.second]);
+        pros::delay(600);
+        openClaw(130, 127);
+        reverseClawIntake(20);
+        pros::delay(100);
+    }
+
+    // Grab pin, toggle, then go to middle
+    chassis.moveToPoint(47.5, 58.5, 1500, {}, true);
+    pros::delay(500);
+    setLift(LIFT_HEIGHTS[GRAB_HEIGHT]);
+    chassis.turnToHeading(270, 600, {}, true);
+    moveForward(-30, 2000, 60, 1, true);
+    startClawIntake();
+    pros::delay(1500);
+    closeClaw();
+    pros::delay(500);
+
+    chassis.moveToPoint(0, 58.5, 3000, {}, true);
+    chassis.turnToHeading(0, 600, {}, true);
+    moveForward(10, 1000, 60, 1, true);
+    resetLift();
+    pros::delay(1000);
+    setLift(LIFT_HEIGHTS[THIRD_STACK] + 140.0f/7); // THIRD_STACK + 200 motor deg
+    pros::delay(500);
+
+    chassis.moveToPoint(0, 0, 3000, {.forwards = false, .maxSpeed = 80}, true);
+    pros::delay(500);
+    setLift(LIFT_HEIGHTS[SECOND_STACK]);
+    pros::delay(2500);
+    setLift(LIFT_HEIGHTS[IDLE_HEIGHT]);
+    pros::delay(600);
+    openClaw(130, 127);
+    reverseClawIntake(20);
+    pros::delay(100);
 }
